@@ -1,6 +1,8 @@
+import { Input } from "@chakra-ui/react"
+
 export default function Search(props: SearchProps) {
-  return <div>Test</div>;
+  return (
+    <Input placeholder="Search contracts ..." size="lg" isFullWidth={true} />
+  );
 }
-interface SearchProps {
-  key: string;
-}
+interface SearchProps {}

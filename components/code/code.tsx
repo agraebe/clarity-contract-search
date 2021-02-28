@@ -1,3 +1,4 @@
+;import { Box } from "@chakra-ui/react";
 import { useEffect } from "react";
 import Prism from "prismjs";
 import { clarity } from "./clarity";
@@ -10,9 +11,11 @@ export default function CodeBlock(props: SourceProps) {
   }, []);
 
   return (
-    <pre>
-      <code className="language-clarity">{props.source}</code>
-    </pre>
+    <Box>
+      <pre>
+        <code className="language-clarity">{props.source}</code>
+      </pre>
+    </Box>
   );
 }
 

@@ -1,24 +1,19 @@
-import Head from "next/head";
+import { Heading, Box, Divider } from "@chakra-ui/react";
+import { Container } from "../components/container/container";
+import { Footer } from "../components/footer/footer";
 import Contracts from "../components/contracts/contracts";
-import styles from "../styles/Home.module.scss";
+import Search from "../components/search/search";
 
 export default function Home({ contracts }: HomeProps) {
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Clarity Contract Search</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://clarity-lang.org/">Clarity</a> contract
-          search
-        </h1>
-        <Contracts contracts={contracts.results} />
-      </main>
-
-      <footer className={styles.footer}>
+    <Container centerContent>
+      <Box padding="8" maxW="3xl">
+        <Heading>Find Clarity contracts</Heading>
+        <Search />
+      </Box>
+      <Divider />
+      <Contracts contracts={contracts.results} />
+      <Footer>
         <a
           href="https://twitter.com/agraebe"
           target="_blank"
@@ -26,8 +21,8 @@ export default function Home({ contracts }: HomeProps) {
         >
           Made with ❤️ by agraebe
         </a>
-      </footer>
-    </div>
+      </Footer>
+    </Container>
   );
 }
 
