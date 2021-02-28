@@ -4,7 +4,7 @@ import { clarity } from "./clarity";
 import "prismjs/components/prism-json";
 clarity(Prism);
 
-export default function CodeBlock(props) {
+export default function CodeBlock(props: SourceProps) {
   useEffect(() => {
     Prism.highlightAll();
   }, []);
@@ -14,4 +14,8 @@ export default function CodeBlock(props) {
       <code className="language-clarity">{props.source}</code>
     </pre>
   );
+}
+
+interface SourceProps {
+  source: string;
 }

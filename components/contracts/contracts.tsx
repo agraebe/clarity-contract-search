@@ -1,8 +1,8 @@
 import CodeBlock from "../code/code";
 
-import styles from "./contracts.module.scss";
+import styles from "../../styles/contracts.module.scss";
 
-export default function Contracts(props) {
+export default function Contracts(props: ContractProps) {
   return (
     <div className={styles.contractList}>
       {props.contracts
@@ -17,4 +17,15 @@ export default function Contracts(props) {
         ))}
     </div>
   );
+}
+
+interface ContractProps {
+  contracts: {
+    tx_id: string;
+    tx_status: string;
+    smart_contract: {
+      contract_id: string;
+      source_code: string;
+    };
+  }[];
 }

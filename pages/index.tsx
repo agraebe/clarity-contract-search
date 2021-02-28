@@ -2,7 +2,7 @@ import Head from "next/head";
 import Contracts from "../components/contracts/contracts";
 import styles from "../styles/Home.module.scss";
 
-export default function Home({ contracts }) {
+export default function Home({ contracts }: HomeProps) {
   return (
     <div className={styles.container}>
       <Head>
@@ -41,5 +41,15 @@ export async function getStaticProps() {
     props: {
       contracts,
     },
+  };
+}
+
+interface HomeProps {
+  contracts: {
+    results: {
+      tx_id: string;
+      tx_status: string;
+      smart_contract: { contract_id: string; source_code: string };
+    }[];
   };
 }

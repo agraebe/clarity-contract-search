@@ -1,8 +1,15 @@
-import '../styles/globals.scss'
-import "prismjs/themes/prism-tomorrow.css"
+import { FC } from "react";
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+import "../styles/globals.scss";
+import "prismjs/themes/prism-tomorrow.css";
+
+function MyApp({ Component, pageProps }: AppProps) {
+  return <Component {...pageProps} />;
 }
 
-export default MyApp
+export default MyApp;
+
+interface AppProps {
+  Component: FC;
+  pageProps: object;
+}
