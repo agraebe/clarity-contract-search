@@ -17,6 +17,7 @@
     "prismjs": "^1.23.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
+    "react-jdenticon": "^0.0.9",
     "sass": "^1.32.8"
   },
   "devDependencies": {

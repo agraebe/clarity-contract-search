@@ -1,17 +1,17 @@
-import { Heading, Box, Divider } from "@chakra-ui/react";
-import { Container } from "../components/container/container";
 import { Footer } from "../components/footer/footer";
 import Contracts from "../components/contracts/contracts";
 import Search from "../components/search/search";
+import Header from "../components/header/header";
+import Head from "next/head";
 
 export default function Home({ contracts }: HomeProps) {
   return (
-    <Container centerContent>
-      <Box padding="8" maxW="3xl">
-        <Heading>Find Clarity contracts</Heading>
-        <Search />
-      </Box>
-      <Divider />
+    <>
+      <Head>
+        <title>Find Clarity contracts</title>
+      </Head>
+      <Header title="Find Clarity contracts" />
+      <Search />
       <Contracts contracts={contracts.results} />
       <Footer>
         <a
@@ -22,7 +22,7 @@ export default function Home({ contracts }: HomeProps) {
           Made with ❤️ by agraebe
         </a>
       </Footer>
-    </Container>
+    </>
   );
 }
 
