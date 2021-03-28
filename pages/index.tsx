@@ -45,11 +45,17 @@ export default function Home({ contracts }: HomeProps) {
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps(context) {
   const res = await fetch(
     "https://stacks-node-api.mainnet.stacks.co/extended/v1/tx/?limit=200&type=smart_contract"
   );
   const contracts = await res.json();
+
+  if (!contracts) {
+    return {
+      notFound: true,
+    };
+  }
 
   return {
     props: {

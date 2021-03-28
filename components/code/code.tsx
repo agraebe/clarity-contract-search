@@ -11,7 +11,7 @@ export default function CodeBlock(props: SourceProps) {
 
   return (
     <Box
-      h="250px"
+      h="300px"
       mr="2"
       borderWidth="1px"
       borderRadius="lg"

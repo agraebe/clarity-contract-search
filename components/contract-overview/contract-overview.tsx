@@ -1,4 +1,13 @@
-import { Box, Button, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Text,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 export default function ContractOverview(props: SourceProps) {
@@ -44,22 +53,35 @@ export default function ContractOverview(props: SourceProps) {
 
   return (
     <Box
-      h="250px"
+      h="300px"
       w="250px"
       ml="2"
       borderWidth="1px"
       borderRadius="lg"
       overflow="hidden"
     >
-      {getTextElem(constant, "constants")}
-      {getTextElem(dataVar, "data variables")}
-      {getTextElem(maps, "maps")}
-      {getTextElem(readOnly, "read only methods")}
-      {getTextElem(publicMethods, "public methods")}
-      {getTextElem(privateMethods, "private methods")}
-      {getTextElem(traits, "traits")}
-      {getTextElem(nfts, "non-fungible tokens")}
-      {getTextElem(fts, "fungible tokens")}
+      <Tabs isFitted variant="enclosed">
+        <TabList mb="1em">
+          <Tab>Declarations</Tab>
+          <Tab>Usage</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            {getTextElem(constant, "constants")}
+            {getTextElem(dataVar, "data variables")}
+            {getTextElem(maps, "maps")}
+            {getTextElem(readOnly, "read only methods")}
+            {getTextElem(publicMethods, "public methods")}
+            {getTextElem(privateMethods, "private methods")}
+            {getTextElem(traits, "traits")}
+            {getTextElem(nfts, "non-fungible tokens")}
+            {getTextElem(fts, "fungible tokens")}
+          </TabPanel>
+          <TabPanel>
+            <p>coming soon ...</p>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </Box>
   );
 }
@@ -69,7 +91,7 @@ function getTextElem(elem, label) {
     return;
   }
   return (
-    <Box px="2">
+    <Box>
       <Text fontSize="xs" as="kbd">
         {elem} {label}
       </Text>
