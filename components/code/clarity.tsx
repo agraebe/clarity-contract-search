@@ -11,15 +11,15 @@ export const clarity = Prism => {
     function primitive(pattern) {
       return RegExp('([\\s([])' + pattern + '(?=[\\s)])');
     }
-  
+
     // Patterns in regular expressions
-  
+
     // Open parenthesis for look-behind
     const par = '(\\()';
     const endpar = '(?=\\))';
     // End the pattern with look-ahead space
     const space = '(?=\\s)';
-  
+
     const language = {
       // Three or four semicolons are considered a heading.
       heading: {
@@ -109,7 +109,6 @@ export const clarity = Prism => {
       },
       punctuation: /[()']/,
     };
-  
+
     Prism.languages.clarity = language;
   };
-  

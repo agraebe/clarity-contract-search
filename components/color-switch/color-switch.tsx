@@ -1,7 +1,7 @@
 import { IconButton, useColorMode } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 
-export default function ColorSwitch(props: ColorSwitchProps) {
+export default function ColorSwitch(props: any) {
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
@@ -12,5 +12,3 @@ export default function ColorSwitch(props: ColorSwitchProps) {
     />
   );
 }
-
-interface ColorSwitchProps {}

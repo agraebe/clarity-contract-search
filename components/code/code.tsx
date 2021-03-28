@@ -1,5 +1,5 @@
-import { Box } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { Box, Button } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import Prism from "prismjs";
 import { clarity } from "./clarity";
 clarity(Prism);
@@ -10,9 +10,9 @@ export default function CodeBlock(props: SourceProps) {
   }, []);
 
   return (
-    <Box>
-      <pre className="line-numbers">
-        <code className="language-clarity">{props.source}</code>
+    <Box maxH="250px" overflow="hidden">
+      <pre className="line-numbers preTruncated">
+        <code className="language-clarity codeTruncated">{props.source}</code>
       </pre>
     </Box>
   );

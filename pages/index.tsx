@@ -44,6 +44,7 @@ interface HomeProps {
     results: {
       tx_id: string;
       tx_status: string;
+      sender_address: string;
       smart_contract: { contract_id: string; source_code: string };
     }[];
   };
