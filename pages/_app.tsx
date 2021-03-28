@@ -1,11 +1,6 @@
 import React, { useState, useEffect, FC } from "react";
-import {
-  ChakraProvider,
-  ColorModeProvider,
-  useColorMode,
-} from "@chakra-ui/react";
+import { useColorMode } from "@chakra-ui/react";
 import { Chakra } from "../chakra.js";
-
 import "../styles/globals.scss";
 
 function MyApp({ Component, pageProps }: AppProps) {

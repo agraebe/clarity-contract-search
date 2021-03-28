@@ -10,7 +10,14 @@ export default function CodeBlock(props: SourceProps) {
   }, []);
 
   return (
-    <Box maxH="250px" overflow="hidden">
+    <Box
+      h="250px"
+      mr="2"
+      borderWidth="1px"
+      borderRadius="lg"
+      flex="1"
+      overflow="hidden"
+    >
       <pre className="line-numbers preTruncated">
         <code className="language-clarity">{props.source}</code>
       </pre>

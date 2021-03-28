@@ -16,5 +16,9 @@ a {
 }
 
 .preTruncated {
-  max-height: 200px;
+  max-height: 250px;
+}
+
+pre[class*=language-] {
+  margin: 0 !important;
 }
