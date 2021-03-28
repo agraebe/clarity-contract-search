@@ -4,8 +4,8 @@ import {
   ColorModeProvider,
   useColorMode,
 } from "@chakra-ui/react";
+import { Chakra } from "../chakra.js";
 
-import theme from "../theme";
 import "../styles/globals.scss";
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -27,21 +27,17 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <ChakraProvider resetCSS theme={theme}>
-      <ColorModeProvider
-        options={{
-          useSystemColorMode: true,
-        }}
-      >
-        <Component {...pageProps} />
-      </ColorModeProvider>
-    </ChakraProvider>
+    <Chakra cookies={pageProps.cookies}>
+      <Component {...pageProps} />
+    </Chakra>
   );
 }
+
+export { getServerSideProps } from "../chakra.js";
 
 export default MyApp;
 
 interface AppProps {
   Component: FC;
-  pageProps: object;
+  pageProps: any;
 }

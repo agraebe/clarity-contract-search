@@ -1,15 +1,14 @@
+import { Flex } from "@chakra-ui/react";
 import { Footer } from "../components/footer/footer";
 import Contracts from "../components/contracts/contracts";
 import Search from "../components/search/search";
 import Header from "../components/header/header";
-import Head from "next/head";
 
 export default function Home({ contracts }: HomeProps) {
   return (
-    <>
-      <Head>
-        <title>Find Clarity contracts</title>
-      </Head>
+    <Flex
+      direction="column"
+    >
       <Header title="Find Clarity contracts" />
       <Search />
       <Contracts contracts={contracts.results} />
@@ -22,7 +21,7 @@ export default function Home({ contracts }: HomeProps) {
           Made with ❤️ by agraebe
         </a>
       </Footer>
-    </>
+    </Flex>
   );
 }
 
