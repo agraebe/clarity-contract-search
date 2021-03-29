@@ -1,10 +1,9 @@
 import { Flex, Stack, Checkbox, Box, Text } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-
+import { useState } from "react";
 import { Footer } from "../components/footer/footer";
 import Contracts from "../components/contracts/contracts";
-import Search from "../components/search/search";
 import Header from "../components/header/header";
+import Search from "../components/search/search";
 
 export default function Home({ contracts }: HomeProps) {
   const [included, setIncluded] = useState([false]);
@@ -45,7 +44,7 @@ export default function Home({ contracts }: HomeProps) {
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps() {
   const res = await fetch(
     "https://stacks-node-api.mainnet.stacks.co/extended/v1/tx/?limit=200&type=smart_contract"
   );

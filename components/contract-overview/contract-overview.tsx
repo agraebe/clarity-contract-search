@@ -18,8 +18,10 @@ export default function ContractOverview(props: SourceProps) {
   const [dataVar, setDataVar] = useState(0);
   const [privateMethods, setprivateMethods] = useState(0);
   const [traits, setTraits] = useState(0);
+  const [useTraits, setUseTraits] = useState(0);
   const [nfts, setNfts] = useState(0);
   const [fts, setFts] = useState(0);
+  const [contractCalls, setcontractCalls] = useState(0);
 
   useEffect(() => {
     setpublicMethods(
@@ -41,12 +43,19 @@ export default function ContractOverview(props: SourceProps) {
     setTraits(
       (props.source.match(new RegExp("define-trait", "g")) || []).length
     );
+    setUseTraits(
+      (props.source.match(new RegExp("use-trait", "g")) || []).length
+    );
     setNfts(
       (props.source.match(new RegExp("define-non-fungible-token", "g")) || [])
         .length
     );
     setFts(
       (props.source.match(new RegExp("define-fungible-token", "g")) || [])
+        .length
+    );
+    setcontractCalls(
+      (props.source.match(new RegExp("contract-call?", "g")) || [])
         .length
     );
   }, []);
@@ -78,7 +87,8 @@ export default function ContractOverview(props: SourceProps) {
             {getTextElem(fts, "fungible tokens")}
           </TabPanel>
           <TabPanel>
-            <p>coming soon ...</p>
+          {getTextElem(useTraits, "traits")}
+          {getTextElem(contractCalls, "contract calls")}
           </TabPanel>
         </TabPanels>
       </Tabs>

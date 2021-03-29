@@ -22,3 +22,28 @@ a {
 pre[class*="language-"] {
   margin: 0 !important;
 }
+
+// INSTANT SEARCH
+
+.hit {
+  display: flex;
+  align-items: center;
+}
+
+.hit-actions {
+  display: flex;
+}
+
+.hit-content {
+  padding: 0px 10px;
+}
+
+.hit-picture img {
+  width: 80px;
+  height: 80px;
+}
+
+.hit-type {
+  color: #888888;
+  font-size: 13px;
+}

@@ -2,6 +2,7 @@ import React, { useState, useEffect, FC } from "react";
 import { useColorMode } from "@chakra-ui/react";
 import { Chakra } from "../chakra.js";
 import "../styles/globals.scss";
+import "instantsearch.css/themes/satellite.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { colorMode } = useColorMode();
