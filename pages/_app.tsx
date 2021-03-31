@@ -3,7 +3,6 @@ import { Chakra } from "../chakra.js";
 
 import "../styles/globals.scss";
 import "instantsearch.css/themes/satellite.css";
-import "../styles/prism-dark.scss";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

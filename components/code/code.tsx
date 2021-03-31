@@ -1,4 +1,5 @@
 import { Box } from "@chakra-ui/react";
+import Highlight, { defaultProps } from "prism-react-renderer";
 
 export default function CodeBlock(props: SourceProps) {
   return (
@@ -8,15 +9,34 @@ export default function CodeBlock(props: SourceProps) {
       borderWidth="1px"
       borderRadius="lg"
       flex="1"
-      overflow="hidden"
+      overflow="scroll"
     >
-      <pre className="line-numbers preTruncated">
-        <code className="language-clarity">{props.source}</code>
-      </pre>
+      <Highlight
+        {...defaultProps}
+        code={props.source}
+        Prism={props.prism}
+        language="clarity"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className} style={style}>
+            {tokens.map((line, i) => (
+              <div className="line" key={i} {...getLineProps({ line, key: i })}>
+                <span className="lineNumber">{i + 1}</span>
+                <span className="lineContent">
+                  {line.map((token, key) => (
+                    <span key={key} {...getTokenProps({ token, key })} />
+                  ))}
+                </span>
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
     </Box>
   );
 }
 
 interface SourceProps {
   source: string;
+  prism: object;
 }

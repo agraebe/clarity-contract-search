@@ -1,21 +1,14 @@
 import { Flex, Stack, Checkbox, Box, Text } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import bluebird from "bluebird";
 import redis from "redis";
 import { Footer } from "../components/footer/footer";
 import Contracts from "../components/contracts/contracts";
 import Header from "../components/header/header";
 import Search from "../components/search/search";
-import Prism from "prismjs";
-import { clarity } from "../components/code/clarity";
-clarity(Prism);
 
 export default function Home({ contracts }: HomeProps) {
   const [included, setIncluded] = useState([false]);
-
-  useEffect(() => {
-    Prism.highlightAll();
-  }, []);
 
   function renderFilter() {
     // TODO: Set filter state

@@ -1,4 +1,7 @@
 import { Box, Flex } from "@chakra-ui/react";
+import Prism from "prismjs";
+import { clarity } from "../code/clarity";
+clarity(Prism);
 import { CodeBlock } from "../code/index";
 import Principal from "../principal/principal";
 import ContractOverview from "../contract-overview/contract-overview";
@@ -8,7 +11,7 @@ export default function Contracts(props: ContractProps) {
     <Box p="4">
       {props.contracts
         .filter((contract) => contract.tx_status === "success")
-        .map((contract, i) => {
+        .map((contract, i, arr) => {
           if (isIncluded(contract.smart_contract.source_code, props.filters)) {
             return (
               <Box key={i} pt="8">
@@ -17,7 +20,10 @@ export default function Contracts(props: ContractProps) {
                   {contract.smart_contract.contract_id.split(".").pop()}
                 </a>
                 <Flex direction="row">
-                  <CodeBlock source={contract.smart_contract.source_code} />
+                  <CodeBlock
+                    source={contract.smart_contract.source_code}
+                    prism={Prism}
+                  />
                   <ContractOverview
                     source={contract.smart_contract.source_code}
                   />
