@@ -1,4 +1,12 @@
-import { Flex, Box, Spacer, Text, useColorMode } from "@chakra-ui/react";
+import {
+  Flex,
+  Box,
+  Spacer,
+  Text,
+  useColorMode,
+  Button,
+} from "@chakra-ui/react";
+import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import ColorSwitch from "../../components/color-switch/color-switch";
 
 export default function Header(props: HeaderProps) {
@@ -23,6 +31,17 @@ export default function Header(props: HeaderProps) {
       <Spacer />
       <Box alignSelf="center">
         <ColorSwitch />
+        <Button
+          ml="5"
+          leftIcon={<QuestionOutlineIcon />}
+          colorScheme="teal"
+          onClick={() =>
+            window.open("https://feedback.clarity-search.dev/", "_blank")
+          }
+          variant="link"
+        >
+          Feature requests
+        </Button>
       </Box>
     </Flex>
   );

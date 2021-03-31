@@ -8,6 +8,7 @@ export default function ColorSwitch(props: any) {
     <IconButton
       aria-label="Toggle colormode"
       onClick={toggleColorMode}
+      variant="ghost"
       icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
     />
   );
