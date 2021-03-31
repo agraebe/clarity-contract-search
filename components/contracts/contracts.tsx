@@ -1,5 +1,5 @@
 import { Box, Flex } from "@chakra-ui/react";
-import CodeBlock from "../code/code";
+import { CodeBlock } from "../code/index";
 import Principal from "../principal/principal";
 import ContractOverview from "../contract-overview/contract-overview";
 
@@ -35,16 +35,18 @@ export default function Contracts(props: ContractProps) {
 function isIncluded(source: string, filters: boolean[]) {
   let matching = true;
 
-  filters.forEach((contraint) => {
-    if (contraint) {
-      matching =
-        (source.match(new RegExp("define-constant", "g")) || []).length > 0;
+  if (filters) {
+    filters.forEach((contraint) => {
+      if (contraint) {
+        matching =
+          (source.match(new RegExp("define-constant", "g")) || []).length > 0;
 
-      if (!matching) {
-        return false;
+        if (!matching) {
+          return false;
+        }
       }
-    }
-  });
+    });
+  }
 
   return matching;
 }

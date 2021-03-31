@@ -1,14 +1,6 @@
-import { Box, Button } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import Prism from "prismjs";
-import { clarity } from "./clarity";
-clarity(Prism);
+import { Box } from "@chakra-ui/react";
 
 export default function CodeBlock(props: SourceProps) {
-  useEffect(() => {
-    Prism.highlightAll();
-  }, []);
-
   return (
     <Box
       h="300px"
