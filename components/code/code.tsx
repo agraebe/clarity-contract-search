@@ -4,7 +4,7 @@ import React from "react";
 import { Box } from "@chakra-ui/react";
 import Highlight, { defaultProps } from "prism-react-renderer";
 
-export default function CodeBlock(props: SourceProps) {
+export function CodeBlock(props: SourceProps) {
   return (
     <Box
       h="300px"
@@ -43,3 +43,5 @@ interface SourceProps {
   source: string;
   prism: object;
 }
+
+export default React.memo(CodeBlock);

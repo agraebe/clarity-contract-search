@@ -2,12 +2,12 @@ import React from "react";
 import { Box, Flex } from "@chakra-ui/react";
 import Prism from "prismjs";
 import { clarity } from "../code/clarity";
-import { CodeBlock } from "../code/index";
+import { CodeBlock } from "../code/code";
 import Principal from "../principal/principal";
 import ContractOverview from "../contract-overview/contract-overview";
 clarity(Prism);
 
-export default function Contracts(props: ContractProps) {
+export function Contracts(props: ContractProps) {
   return (
     <Box p="4">
       {props.contracts
@@ -69,3 +69,5 @@ interface ContractProps {
   }[];
   filters: boolean[];
 }
+
+export default React.memo(Contracts);

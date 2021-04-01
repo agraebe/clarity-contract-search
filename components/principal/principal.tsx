@@ -2,7 +2,7 @@ import React from "react";
 import { Stack, Text } from "@chakra-ui/react";
 import Jdenticon from "react-jdenticon";
 
-export default function Principal(props: PrincipalProps) {
+export function Principal(props: PrincipalProps) {
   return (
     <Stack direction="row" spacing={3}>
       <Jdenticon size="16" value={props.principal} />
@@ -16,3 +16,5 @@ export default function Principal(props: PrincipalProps) {
 interface PrincipalProps {
   principal: string;
 }
+
+export default React.memo(Principal);

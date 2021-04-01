@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
-export default function ContractOverview(props: SourceProps) {
+export function ContractOverview(props: SourceProps) {
   const [maps, setMaps] = useState(0);
   const [readOnly, setReadOnly] = useState(0);
   const [publicMethods, setpublicMethods] = useState(0);
@@ -111,3 +111,5 @@ function getTextElem(elem, label) {
 interface SourceProps {
   source: string;
 }
+
+export default React.memo(ContractOverview);
