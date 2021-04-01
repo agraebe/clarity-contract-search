@@ -1,3 +1,4 @@
+import React from "react";
 import { Flex, Stack, Checkbox, Box, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import bluebird from "bluebird";
@@ -18,7 +19,7 @@ export default function Home({ contracts }: HomeProps) {
         <Stack p="2" direction="row">
           <Checkbox
             isChecked={included[0]}
-            onChange={(e) => setIncluded([e.target.checked])}
+            onChange={e => setIncluded([e.target.checked])}
           >
             Constants
           </Checkbox>
@@ -39,7 +40,11 @@ export default function Home({ contracts }: HomeProps) {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Made with ❤️ by agraebe
+          Made with{" "}
+          <span role="img" aria-label="love">
+            ❤️
+          </span>{" "}
+          by agraebe
         </a>
       </Footer>
     </Flex>
@@ -53,11 +58,11 @@ export async function getStaticProps() {
   const cache = redis.createClient({
     host: process.env.REDIS_HOST,
     port: process.env.REDIS_PORT,
-    password: process.env.REDIS_PASSWORD,
+    password: process.env.REDIS_PASSWORD
   });
   let data = {};
 
-  await cache.existsAsync("clarity-contracts").then(async (reply) => {
+  await cache.existsAsync("clarity-contracts").then(async reply => {
     if (reply !== 1) {
       // cache miss, need to fetch
       data = await fetchData(apiUrl);
@@ -71,8 +76,8 @@ export async function getStaticProps() {
 
   return {
     props: {
-      contracts: data,
-    },
+      contracts: data
+    }
   };
 }
 

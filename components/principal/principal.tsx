@@ -1,3 +1,4 @@
+import React from "react";
 import { Stack, Text } from "@chakra-ui/react";
 import Jdenticon from "react-jdenticon";
 

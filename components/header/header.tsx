@@ -1,10 +1,11 @@
+import React from "react";
 import {
   Flex,
   Box,
   Spacer,
   Text,
   useColorMode,
-  Button,
+  Button
 } from "@chakra-ui/react";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import ColorSwitch from "../../components/color-switch/color-switch";

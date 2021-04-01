@@ -1,12 +1,12 @@
+import React from "react";
 import {
   Box,
-  Button,
   Text,
   Tabs,
   TabList,
   Tab,
   TabPanels,
-  TabPanel,
+  TabPanel
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
@@ -55,10 +55,9 @@ export default function ContractOverview(props: SourceProps) {
         .length
     );
     setcontractCalls(
-      (props.source.match(new RegExp("contract-call?", "g")) || [])
-        .length
+      (props.source.match(new RegExp("contract-call?", "g")) || []).length
     );
-  }, []);
+  }, [props.source]);
 
   return (
     <Box
@@ -87,8 +86,8 @@ export default function ContractOverview(props: SourceProps) {
             {getTextElem(fts, "fungible tokens")}
           </TabPanel>
           <TabPanel>
-          {getTextElem(useTraits, "traits")}
-          {getTextElem(contractCalls, "contract calls")}
+            {getTextElem(useTraits, "traits")}
+            {getTextElem(contractCalls, "contract calls")}
           </TabPanel>
         </TabPanels>
       </Tabs>

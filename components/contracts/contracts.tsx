@@ -1,16 +1,17 @@
+import React from "react";
 import { Box, Flex } from "@chakra-ui/react";
 import Prism from "prismjs";
 import { clarity } from "../code/clarity";
-clarity(Prism);
 import { CodeBlock } from "../code/index";
 import Principal from "../principal/principal";
 import ContractOverview from "../contract-overview/contract-overview";
+clarity(Prism);
 
 export default function Contracts(props: ContractProps) {
   return (
     <Box p="4">
       {props.contracts
-        .filter((contract) => contract.tx_status === "success")
+        .filter(contract => contract.tx_status === "success")
         .map((contract, i, arr) => {
           if (isIncluded(contract.smart_contract.source_code, props.filters)) {
             return (
@@ -31,8 +32,7 @@ export default function Contracts(props: ContractProps) {
               </Box>
             );
           }
-
-          return;
+          return null;
         })}
     </Box>
   );
@@ -42,7 +42,7 @@ function isIncluded(source: string, filters: boolean[]) {
   let matching = true;
 
   if (filters) {
-    filters.forEach((contraint) => {
+    filters.forEach(contraint => {
       if (contraint) {
         matching =
           (source.match(new RegExp("define-constant", "g")) || []).length > 0;
