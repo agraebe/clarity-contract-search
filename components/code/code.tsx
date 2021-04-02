@@ -3,6 +3,7 @@
 import React from "react";
 import { Box } from "@chakra-ui/react";
 import Highlight, { defaultProps } from "prism-react-renderer";
+import Copy from "../copy/copy";
 
 export function CodeBlock(props: SourceProps) {
   return (
@@ -14,6 +15,7 @@ export function CodeBlock(props: SourceProps) {
       flex="1"
       overflow="scroll"
     >
+      <Copy source={props.source} />
       <Highlight
         {...defaultProps}
         code={props.source}
@@ -24,7 +26,7 @@ export function CodeBlock(props: SourceProps) {
           <pre className={className} style={style}>
             {tokens.map((line, i) => (
               <div className="line" key={i} {...getLineProps({ line, key: i })}>
-                <span className="lineNumber">{i + 1}</span>
+                <span className="lineNumber">{pad(i + 1, 3)}</span>
                 <span className="lineContent">
                   {line.map((token, key) => (
                     <span key={key} {...getTokenProps({ token, key })} />
@@ -37,6 +39,12 @@ export function CodeBlock(props: SourceProps) {
       </Highlight>
     </Box>
   );
+}
+
+function pad(n, width, z) {
+  z = z || "0";
+  n = n + "";
+  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }
 
 interface SourceProps {

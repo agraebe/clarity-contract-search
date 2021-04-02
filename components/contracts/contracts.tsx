@@ -1,55 +1,47 @@
 import React from "react";
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, Link } from "@chakra-ui/react";
 import Prism from "prismjs";
 import { clarity } from "../code/clarity";
 import { CodeBlock } from "../code/code";
 import Principal from "../principal/principal";
 import ContractOverview from "../contract-overview/contract-overview";
+import { ClarityContractSerialized } from "../../classes/clarity-contract";
 clarity(Prism);
 
 export function Contracts(props: ContractProps) {
   return (
     <Box p="4">
-      {props.contracts
-        .filter(contract => contract.tx_status === "success")
-        .map((contract, i, arr) => {
-          if (isIncluded(contract.smart_contract.source_code, props.filters)) {
-            return (
-              <Box key={i} pt="8">
-                <Principal principal={contract.sender_address} />
-                <a href={`https://explorer.stacks.co/txid/${contract.tx_id}`}>
-                  {contract.smart_contract.contract_id.split(".").pop()}
-                </a>
-                <Flex direction="row">
-                  <CodeBlock
-                    source={contract.smart_contract.source_code}
-                    prism={Prism}
-                  />
-                  <ContractOverview
-                    source={contract.smart_contract.source_code}
-                  />
-                </Flex>
-              </Box>
-            );
-          }
-          return null;
-        })}
+      {props.contracts.map((contract, i) => {
+        if (isIncluded(contract, props.filters)) {
+          return (
+            <Box key={i} pt="8">
+              <Principal principal={contract.sender} />
+              <Link
+                href={`https://explorer.stacks.co/txid/${contract.tx_id}`}
+                isExternal
+              >
+                {contract.name}
+              </Link>
+              <Flex direction="row" pt="2">
+                <CodeBlock source={contract.source} prism={Prism} />
+                <ContractOverview contract={contract} />
+              </Flex>
+            </Box>
+          );
+        }
+        return null;
+      })}
     </Box>
   );
 }
 
-function isIncluded(source: string, filters: boolean[]) {
+function isIncluded(contract: ClarityContractSerialized, filters: boolean[]) {
   let matching = true;
 
   if (filters) {
-    filters.forEach(contraint => {
-      if (contraint) {
-        matching =
-          (source.match(new RegExp("define-constant", "g")) || []).length > 0;
-
-        if (!matching) {
-          return false;
-        }
+    filters.forEach((contraint) => {
+      if (contraint && !contract.constants) {
+        return false;
       }
     });
   }
@@ -58,15 +50,7 @@ function isIncluded(source: string, filters: boolean[]) {
 }
 
 interface ContractProps {
-  contracts: {
-    tx_id: string;
-    tx_status: string;
-    sender_address: string;
-    smart_contract: {
-      contract_id: string;
-      source_code: string;
-    };
-  }[];
+  contracts: ClarityContractSerialized[];
   filters: boolean[];
 }
 

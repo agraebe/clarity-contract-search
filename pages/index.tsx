@@ -7,6 +7,7 @@ import { Footer } from "../components/footer/footer";
 import Contracts from "../components/contracts/contracts";
 import Header from "../components/header/header";
 import Search from "../components/search/search";
+import ClarityContract from "../classes/clarity-contract";
 
 export default function Home({ contracts }: HomeProps) {
   const [included, setIncluded] = useState([false]);
@@ -19,7 +20,7 @@ export default function Home({ contracts }: HomeProps) {
         <Stack p="2" direction="row">
           <Checkbox
             isChecked={included[0]}
-            onChange={e => setIncluded([e.target.checked])}
+            onChange={(e) => setIncluded([e.target.checked])}
           >
             Constants
           </Checkbox>
@@ -33,7 +34,7 @@ export default function Home({ contracts }: HomeProps) {
       <Header title="Find Clarity contracts" />
       <Search />
       {renderFilter()}
-      <Contracts contracts={contracts.results} filters={included} />
+      <Contracts contracts={contracts} filters={included} />
       <Footer>
         <a
           href="https://twitter.com/agraebe"
@@ -58,11 +59,14 @@ export async function getStaticProps() {
   const cache = redis.createClient({
     host: process.env.REDIS_HOST,
     port: process.env.REDIS_PORT,
-    password: process.env.REDIS_PASSWORD
+    password: process.env.REDIS_PASSWORD,
   });
-  let data = {};
+  let data = {
+    results: [],
+  };
+  const contracts = [];
 
-  await cache.existsAsync("clarity-contracts").then(async reply => {
+  await cache.existsAsync("clarity-contracts").then(async (reply) => {
     if (reply !== 1) {
       // cache miss, need to fetch
       data = await fetchData(apiUrl);
@@ -71,13 +75,26 @@ export async function getStaticProps() {
     } else {
       // cache hit, will get data from redis
       data = JSON.parse(await cache.getAsync("clarity-contracts"));
+
+      // filter for success txs
+      data = data.results.filter((tx) => tx.tx_status === "success");
+
+      // instantiate contract instances
+      data.forEach((tx) => {
+        contracts.push(
+          new ClarityContract(
+            tx.smart_contract.contract_id,
+            tx.smart_contract.source_code
+          ).toJSON()
+        );
+      });
     }
   });
 
   return {
     props: {
-      contracts: data
-    }
+      contracts,
+    },
   };
 }
 

@@ -17,20 +17,40 @@ a {
 
 // CODE
 
-.line {
-  display: table-row;
+.token::selection {
+  color: rgb(230, 209, 209);
+  background: rgb(148, 54, 82);
+}
+
+.token-line {
+  display: flex;
+  align-items: center;
+  height: 24px;
+}
+
+.token-line:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-right-color: rgb(203, 207, 214);
 }
 
 .lineNumber {
-  display: table-cell;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
   text-align: right;
-  padding-right: 1em;
+  padding-right: 16px;
+  padding-left: 16px;
+  border-right-width: 1px;
+  border-right-style: solid;
+  border-right-color: inherit;
+  color: rgb(161, 167, 179);
   user-select: none;
-  opacity: 0.5;
+  opacity: 0.3;
 }
 
 .lineContent {
-  display: table-cell;
+  display: flex;
+  padding-left: 16px;
 }
 
 pre[class*="language-"] {
@@ -39,6 +59,16 @@ pre[class*="language-"] {
   text-align: left;
   padding: 0.5em;
   overflow: scroll;
+}
+
+.copyWrapper {
+  position: relative;
+}
+
+.copyBtn {
+  position: absolute !important;
+  right: 20px;
+  top: 10px;
 }
 
 // INSTANT SEARCH
