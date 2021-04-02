@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Stack, Checkbox, Box, Text, Heading } from "@chakra-ui/react";
+import { Flex, Stack, Checkbox, Box, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import bluebird from "bluebird";
@@ -8,10 +8,11 @@ import { Footer } from "../components/footer/footer";
 import Contracts from "../components/contracts/contracts";
 import Header from "../components/header/header";
 import Search from "../components/search/search";
-import ClarityContract from "../classes/clarity-contract";
+import ClarityContract, {
+  ClarityContractSerialized
+} from "../classes/clarity-contract";
 
 export default function Home({ contracts }: HomeProps) {
-  let contractDisplayed = 0;
   const filter = useNextQueryParam("filter") || "";
   const [included, setIncluded] = useState([
     filter.includes("readonly"),
@@ -20,7 +21,7 @@ export default function Home({ contracts }: HomeProps) {
     filter.includes("datavar"),
     filter.includes("map"),
     filter.includes("nft"),
-    filter.includes("ft"),
+    filter.includes("ft")
   ]);
   const filterNames = [
     "read-only methods",
@@ -29,7 +30,7 @@ export default function Home({ contracts }: HomeProps) {
     "data variables",
     "maps",
     "non-fungible tokens",
-    "fungible tokens",
+    "fungible tokens"
   ];
 
   function renderFilter() {
@@ -41,7 +42,7 @@ export default function Home({ contracts }: HomeProps) {
             return (
               <Checkbox
                 isChecked={elem}
-                onChange={(e) => {
+                onChange={e => {
                   let newArr = [...included];
                   newArr.map((data, index) => {
                     if (i === index) {
@@ -90,7 +91,7 @@ export function useNextQueryParam(key: string) {
   const value = React.useMemo(() => {
     const res = router.asPath.match(new RegExp(`[&?]${key}=(.*)(&|$)`)) || [];
     return res[1];
-  }, [router.asPath]);
+  }, [router.asPath, key]);
 
   return value;
 }
@@ -102,14 +103,14 @@ export async function getStaticProps() {
   const cache = redis.createClient({
     host: process.env.REDIS_HOST,
     port: process.env.REDIS_PORT,
-    password: process.env.REDIS_PASSWORD,
+    password: process.env.REDIS_PASSWORD
   });
   let data = {
-    results: [],
+    results: []
   };
   const contracts = [];
 
-  await cache.existsAsync("clarity-contracts").then(async (reply) => {
+  await cache.existsAsync("clarity-contracts").then(async reply => {
     if (reply !== 1) {
       // cache miss, need to fetch
       data = await fetchData(apiUrl);
@@ -120,10 +121,10 @@ export async function getStaticProps() {
       data = JSON.parse(await cache.getAsync("clarity-contracts"));
 
       // filter for success txs
-      data = data.results.filter((tx) => tx.tx_status === "success");
+      (data as any) = data.results.filter(tx => tx.tx_status === "success");
 
       // instantiate contract instances
-      data.forEach((tx) => {
+      (data as any).forEach(tx => {
         contracts.push(
           new ClarityContract(
             tx.tx_id,
@@ -137,8 +138,8 @@ export async function getStaticProps() {
 
   return {
     props: {
-      contracts,
-    },
+      contracts
+    }
   };
 }
 
@@ -148,12 +149,5 @@ async function fetchData(url) {
 }
 
 interface HomeProps {
-  contracts: {
-    results: {
-      tx_id: string;
-      tx_status: string;
-      sender_address: string;
-      smart_contract: { contract_id: string; source_code: string };
-    }[];
-  };
+  contracts: ClarityContractSerialized[];
 }
