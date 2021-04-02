@@ -17,7 +17,7 @@ export function Contracts(props: ContractProps) {
             <Box key={i} pt="8">
               <Principal principal={contract.sender} />
               <Link
-                href={`https://explorer.stacks.co/txid/${contract.tx_id}`}
+                href={`https://explorer.stacks.co/txid/${contract.txId}`}
                 isExternal
               >
                 {contract.name}

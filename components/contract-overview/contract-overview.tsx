@@ -22,12 +22,24 @@ export function ContractOverview({ contract }: SourceProps) {
     >
       <Tabs isFitted variant="enclosed">
         <TabList mb="1em">
-          <Tab>Declarations</Tab>
+          <Tab>Declaration</Tab>
           <Tab>Usage</Tab>
         </TabList>
         <TabPanels>
-          <TabPanel>{getTextElem(contract.constants, "constants")}</TabPanel>
-          <TabPanel></TabPanel>
+          <TabPanel>
+            {getTextElem(contract.readOnlyMethods, "read-only methods")}
+            {getTextElem(contract.publicMethods, "public methods")}
+            {getTextElem(contract.privateMethods, "private methods")}
+            {getTextElem(contract.constants, "constants")}
+            {getTextElem(contract.dataVars, "data variables")}
+            {getTextElem(contract.maps, "maps")}
+            {getTextElem(contract.nfts, "non-fungible tokens")}
+            {getTextElem(contract.fts, "fungible tokens")}
+          </TabPanel>
+          <TabPanel>
+            {getTextElem(contract.useTraits, "traits")}
+            {getTextElem(contract.useContractCalls, "contract calls")}
+          </TabPanel>
         </TabPanels>
       </Tabs>
     </Box>

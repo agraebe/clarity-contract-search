@@ -7,7 +7,6 @@ export function Copy({ source }: CopyProps) {
     <div className="copyWrapper">
       <IconButton
         onClick={() => copyToClipboard(source)}
-        colorScheme="blue"
         aria-label="Copy"
         className="copyBtn"
         icon={<CopyIcon />}

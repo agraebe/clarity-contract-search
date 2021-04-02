@@ -83,6 +83,7 @@ export async function getStaticProps() {
       data.forEach((tx) => {
         contracts.push(
           new ClarityContract(
+            tx.tx_id,
             tx.smart_contract.contract_id,
             tx.smart_contract.source_code
           ).toJSON()
