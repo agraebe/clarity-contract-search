@@ -6,7 +6,7 @@ import {
   TabList,
   Tab,
   TabPanels,
-  TabPanel,
+  TabPanel
 } from "@chakra-ui/react";
 import { ClarityContractSerialized } from "../../classes/clarity-contract";
 

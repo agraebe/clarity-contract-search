@@ -10,20 +10,49 @@ import Search from "../components/search/search";
 import ClarityContract from "../classes/clarity-contract";
 
 export default function Home({ contracts }: HomeProps) {
-  const [included, setIncluded] = useState([false]);
+  const [included, setIncluded] = useState([
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ]);
+  const filterNames = [
+    "read-only methods",
+    "public methods",
+    "constants",
+    "data variables",
+    "maps",
+    "non-fungible tokens",
+    "fungible tokens"
+  ];
 
   function renderFilter() {
-    // TODO: Set filter state
     return (
       <Box m="4">
-        <Text>Only contracts that include ...</Text>
+        <Text>Only contracts that declare ...</Text>
         <Stack p="2" direction="row">
-          <Checkbox
-            isChecked={included[0]}
-            onChange={(e) => setIncluded([e.target.checked])}
-          >
-            Constants
-          </Checkbox>
+          {included.map((elem, i) => {
+            return (
+              <Checkbox
+                isChecked={elem}
+                onChange={e => {
+                  let newArr = [...included];
+                  newArr.map((data, index) => {
+                    if (i === index) {
+                      newArr[index] = e.target.checked;
+                      return;
+                    }
+                  });
+                  setIncluded(newArr);
+                }}
+              >
+                {filterNames[i]}
+              </Checkbox>
+            );
+          })}
         </Stack>
       </Box>
     );
@@ -32,7 +61,7 @@ export default function Home({ contracts }: HomeProps) {
   return (
     <Flex direction="column">
       <Header title="Find Clarity contracts" />
-      <Search />
+      {false && <Search />}
       {renderFilter()}
       <Contracts contracts={contracts} filters={included} />
       <Footer>
@@ -59,14 +88,14 @@ export async function getStaticProps() {
   const cache = redis.createClient({
     host: process.env.REDIS_HOST,
     port: process.env.REDIS_PORT,
-    password: process.env.REDIS_PASSWORD,
+    password: process.env.REDIS_PASSWORD
   });
   let data = {
-    results: [],
+    results: []
   };
   const contracts = [];
 
-  await cache.existsAsync("clarity-contracts").then(async (reply) => {
+  await cache.existsAsync("clarity-contracts").then(async reply => {
     if (reply !== 1) {
       // cache miss, need to fetch
       data = await fetchData(apiUrl);
@@ -77,10 +106,10 @@ export async function getStaticProps() {
       data = JSON.parse(await cache.getAsync("clarity-contracts"));
 
       // filter for success txs
-      data = data.results.filter((tx) => tx.tx_status === "success");
+      data = data.results.filter(tx => tx.tx_status === "success");
 
       // instantiate contract instances
-      data.forEach((tx) => {
+      data.forEach(tx => {
         contracts.push(
           new ClarityContract(
             tx.tx_id,
@@ -94,8 +123,8 @@ export async function getStaticProps() {
 
   return {
     props: {
-      contracts,
-    },
+      contracts
+    }
   };
 }
 

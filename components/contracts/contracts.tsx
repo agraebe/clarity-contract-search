@@ -38,13 +38,35 @@ export function Contracts(props: ContractProps) {
 function isIncluded(contract: ClarityContractSerialized, filters: boolean[]) {
   let matching = true;
 
-  if (filters) {
-    filters.forEach((contraint) => {
-      if (contraint && !contract.constants) {
-        return false;
+  filters.forEach((active, i) => {
+    if (active) {
+      switch (i) {
+        case 0:
+          if (!contract.readOnlyMethods) matching = false;
+          break;
+        case 1:
+          if (!contract.publicMethods) matching = false;
+          break;
+        case 2:
+          if (!contract.constants) matching = false;
+          break;
+        case 3:
+          if (!contract.dataVars) matching = false;
+          break;
+        case 4:
+          if (!contract.maps) matching = false;
+          break;
+        case 5:
+          if (!contract.nfts) matching = false;
+          break;
+        case 6:
+          if (!contract.fts) matching = false;
+          break;
+        default:
+          break;
       }
-    });
-  }
+    }
+  });
 
   return matching;
 }
