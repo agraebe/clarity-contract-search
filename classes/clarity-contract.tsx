@@ -15,9 +15,16 @@ export interface ClarityContractSerialized {
   traits: number;
   nfts: number;
   fts: number;
-  useTraits: number;
+  useTrait: number;
   useContractCalls: number;
   useBlockHeight: number;
+  useBlockInfo: number;
+  useBurn: number;
+  useMint: number;
+  useTransfer: number;
+  useGetBalance: number;
+  useGetOwner: number;
+  useGetSupply: number;
 }
 
 export default class ClarityContract {
@@ -35,9 +42,16 @@ export default class ClarityContract {
   traits: number;
   nfts: number;
   fts: number;
-  useTraits: number;
+  useTrait: number;
   useContractCalls: number;
   useBlockHeight: number;
+  useBlockInfo: number;
+  useBurn: number;
+  useMint: number;
+  useTransfer: number;
+  useGetBalance: number;
+  useGetOwner: number;
+  useGetSupply: number;
 
   constructor(txId: string, id: string, source: string) {
     this.txId = txId;
@@ -63,9 +77,18 @@ export default class ClarityContract {
     this.fts = occurrences(this.source, "define-fungible-token");
 
     // usage
-    this.useTraits = occurrences(this.source, "use-trait");
+    this.useTrait =
+      occurrences(this.source, "use-trait") +
+      occurrences(this.source, "impl-trait");
     this.useContractCalls = occurrences(this.source, "contract-call?");
     this.useBlockHeight = occurrences(this.source, "block-height");
+    this.useBlockInfo = occurrences(this.source, "get-block-info?");
+    this.useBurn = occurrences(this.source, "-burn?");
+    this.useMint = occurrences(this.source, "ft-mint?");
+    this.useTransfer = occurrences(this.source, "-transfer?");
+    this.useGetBalance = occurrences(this.source, "-get-balance");
+    this.useGetOwner = occurrences(this.source, "nft-get-owner?");
+    this.useGetSupply = occurrences(this.source, "ft-get-supply");
   }
 
   toJSON(): ClarityContractSerialized {
@@ -84,9 +107,16 @@ export default class ClarityContract {
       traits: this.traits,
       nfts: this.nfts,
       fts: this.fts,
-      useTraits: this.useTraits,
+      useTrait: this.useTrait,
       useContractCalls: this.useContractCalls,
       useBlockHeight: this.useBlockHeight,
+      useBlockInfo: this.useBlockInfo,
+      useBurn: this.useBurn,
+      useMint: this.useMint,
+      useTransfer: this.useTransfer,
+      useGetBalance: this.useGetBalance,
+      useGetOwner: this.useGetOwner,
+      useGetSupply: this.useGetSupply,
     };
   }
 }

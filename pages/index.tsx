@@ -37,7 +37,8 @@ export default function Home({ contracts }: HomeProps) {
     declareParam.includes("datavar"),
     declareParam.includes("map"),
     declareParam.includes("nft"),
-    declareParam.includes("ft")
+    declareParam.includes("ft"),
+    declareParam.includes("trait")
   ]);
   const declarationFilterNames = [
     "read-only methods",
@@ -46,15 +47,34 @@ export default function Home({ contracts }: HomeProps) {
     "data variables",
     "maps",
     "non-fungible tokens",
-    "fungible tokens"
+    "fungible tokens",
+    "traits"
   ];
 
   const [using, setUsing] = useState([
     useParam.includes("trait"),
     useParam.includes("call"),
-    useParam.includes("height")
+    useParam.includes("blockheight"),
+    useParam.includes("blockinfo"),
+    useParam.includes("burn"),
+    useParam.includes("mint"),
+    useParam.includes("transfer"),
+    useParam.includes("balance"),
+    useParam.includes("owner"),
+    useParam.includes("supply")
   ]);
-  const usageFilterNames = ["traits", "contract calls", "block height"];
+  const usageFilterNames = [
+    "trait",
+    "contract calls",
+    "block height",
+    "block info",
+    "burns",
+    "mints",
+    "transfers",
+    "get balance",
+    "get owner",
+    "get supply"
+  ];
 
   useEffect(() => {
     filterContracts();
@@ -225,6 +245,9 @@ export default function Home({ contracts }: HomeProps) {
           case 6:
             if (!contract.fts) matching = false;
             break;
+          case 7:
+            if (!contract.useTrait) matching = false;
+            break;
           default:
             break;
         }
@@ -236,13 +259,34 @@ export default function Home({ contracts }: HomeProps) {
       if (active) {
         switch (i) {
           case 0:
-            if (!contract.useTraits) matching = false;
+            if (!contract.useTrait) matching = false;
             break;
           case 1:
             if (!contract.useContractCalls) matching = false;
             break;
           case 2:
             if (!contract.useBlockHeight) matching = false;
+            break;
+          case 3:
+            if (!contract.useBlockInfo) matching = false;
+            break;
+          case 4:
+            if (!contract.useBurn) matching = false;
+            break;
+          case 5:
+            if (!contract.useMint) matching = false;
+            break;
+          case 6:
+            if (!contract.useTransfer) matching = false;
+            break;
+          case 7:
+            if (!contract.useGetBalance) matching = false;
+            break;
+          case 8:
+            if (!contract.useGetOwner) matching = false;
+            break;
+          case 9:
+            if (!contract.useGetSupply) matching = false;
             break;
           default:
             break;

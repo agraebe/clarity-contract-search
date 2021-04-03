@@ -35,11 +35,19 @@ export function ContractOverview({ contract }: SourceProps) {
             {getTextElem(contract.maps, "maps")}
             {getTextElem(contract.nfts, "non-fungible tokens")}
             {getTextElem(contract.fts, "fungible tokens")}
+            {getTextElem(contract.traits, "traits")}
           </TabPanel>
           <TabPanel>
-            {getTextElem(contract.useTraits, "traits")}
+            {getTextElem(contract.useTrait, "traits")}
             {getTextElem(contract.useContractCalls, "contract calls")}
             {getTextElem(contract.useBlockHeight, "block height")}
+            {getTextElem(contract.useBlockInfo, "block info")}
+            {getTextElem(contract.useBurn, "burns")}
+            {getTextElem(contract.useMint, "mints")}
+            {getTextElem(contract.useTransfer, "transfers")}
+            {getTextElem(contract.useGetBalance, "get balance")}
+            {getTextElem(contract.useGetOwner, "get owner")}
+            {getTextElem(contract.useGetSupply, "get supply")}
           </TabPanel>
         </TabPanels>
       </Tabs>
