@@ -1,9 +1,14 @@
-import React from "react";
-import { Flex, Stack, Checkbox, Box, Text } from "@chakra-ui/react";
+import React, { useEffect } from "react";
+import {
+  Flex,
+  Stack,
+  Checkbox,
+  Box,
+  Text,
+  useColorModeValue
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import bluebird from "bluebird";
-import redis from "redis";
 import { Footer } from "../components/footer/footer";
 import Contracts from "../components/contracts/contracts";
 import Header from "../components/header/header";
@@ -23,6 +28,7 @@ export default function Home({ contracts }: HomeProps) {
     filter.includes("nft"),
     filter.includes("ft")
   ]);
+  const [filteredContracts, setFilteredContracts] = useState([]);
   const filterNames = [
     "read-only methods",
     "public methods",
@@ -33,15 +39,25 @@ export default function Home({ contracts }: HomeProps) {
     "fungible tokens"
   ];
 
-  function renderFilter() {
+  useEffect(() => {
+    setFilteredContracts([]);
+    contracts.forEach((contract, i) => {
+      if (isIncluded(contract)) {
+        setFilteredContracts(arr => [...arr, contract]);
+      }
+    });
+  }, [contracts, included]);
+
+  function renderFilter(color) {
     return (
-      <Box m="4">
+      <Box m="4" borderRadius="lg" p="4" bg={color}>
         <Text>Only contracts that declare ...</Text>
-        <Stack p="2" direction="row">
+        <Stack p="2" spacing={6} direction="row">
           {included.map((elem, i) => {
             return (
               <Checkbox
                 isChecked={elem}
+                key={`checkbox-${i}`}
                 onChange={e => {
                   let newArr = [...included];
                   newArr.map((data, index) => {
@@ -62,12 +78,57 @@ export default function Home({ contracts }: HomeProps) {
     );
   }
 
+  function isIncluded(contract: ClarityContractSerialized) {
+    let matching = true;
+
+    included.forEach((active, i) => {
+      if (active) {
+        switch (i) {
+          case 0:
+            if (!contract.readOnlyMethods) matching = false;
+            break;
+          case 1:
+            if (!contract.publicMethods) matching = false;
+            break;
+          case 2:
+            if (!contract.constants) matching = false;
+            break;
+          case 3:
+            if (!contract.dataVars) matching = false;
+            break;
+          case 4:
+            if (!contract.maps) matching = false;
+            break;
+          case 5:
+            if (!contract.nfts) matching = false;
+            break;
+          case 6:
+            if (!contract.fts) matching = false;
+            break;
+          default:
+            break;
+        }
+      }
+    });
+
+    return matching;
+  }
+
   return (
     <Flex direction="column">
-      <Header title="Find Clarity contracts" />
-      {false && <Search />}
-      {renderFilter()}
-      <Contracts contracts={contracts} filters={included} />
+      <Header title="Search Clarity contracts" />
+      <Search />
+      {renderFilter(useColorModeValue("gray.100", "gray.700"))}
+      <Text
+        align="right"
+        fontSize="sm"
+        px="4"
+        pt="4"
+        color={useColorModeValue("gray.800", "gray.100")}
+      >
+        showing {filteredContracts.length} contracts
+      </Text>
+      <Contracts contracts={filteredContracts} />
       <Footer>
         <a
           href="https://twitter.com/agraebe"
@@ -99,41 +160,26 @@ export function useNextQueryParam(key: string) {
 export async function getStaticProps() {
   const apiUrl =
     "https://stacks-node-api.mainnet.stacks.co/extended/v1/tx/?limit=200&type=smart_contract";
-  bluebird.promisifyAll(redis.RedisClient.prototype);
-  const cache = redis.createClient({
-    host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT,
-    password: process.env.REDIS_PASSWORD
-  });
   let data = {
     results: []
   };
   const contracts = [];
 
-  await cache.existsAsync("clarity-contracts").then(async reply => {
-    if (reply !== 1) {
-      // cache miss, need to fetch
-      data = await fetchData(apiUrl);
-      // expire after 24 hours
-      await cache.set("clarity-contracts", JSON.stringify(data), "EX", 86400);
-    } else {
-      // cache hit, will get data from redis
-      data = JSON.parse(await cache.getAsync("clarity-contracts"));
+  // cache miss, need to fetch
+  data = await fetchData(apiUrl);
 
-      // filter for success txs
-      (data as any) = data.results.filter(tx => tx.tx_status === "success");
+  // filter for success txs
+  (data as any) = data.results.filter(tx => tx.tx_status === "success");
 
-      // instantiate contract instances
-      (data as any).forEach(tx => {
-        contracts.push(
-          new ClarityContract(
-            tx.tx_id,
-            tx.smart_contract.contract_id,
-            tx.smart_contract.source_code
-          ).toJSON()
-        );
-      });
-    }
+  // instantiate contract instances
+  (data as any).forEach(tx => {
+    contracts.push(
+      new ClarityContract(
+        tx.tx_id,
+        tx.smart_contract.contract_id,
+        tx.smart_contract.source_code
+      ).toJSON()
+    );
   });
 
   return {
