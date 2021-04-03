@@ -5,20 +5,22 @@ import {
   Checkbox,
   Box,
   Text,
-  useColorModeValue
+  useColorModeValue,
+  Input
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Footer } from "../components/footer/footer";
 import Contracts from "../components/contracts/contracts";
 import Header from "../components/header/header";
-import Search from "../components/search/search";
 import ClarityContract, {
   ClarityContractSerialized
 } from "../classes/clarity-contract";
 
 export default function Home({ contracts }: HomeProps) {
   const filter = useNextQueryParam("filter") || "";
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredContracts, setFilteredContracts] = useState([]);
   const [included, setIncluded] = useState([
     filter.includes("readonly"),
     filter.includes("public"),
@@ -28,7 +30,6 @@ export default function Home({ contracts }: HomeProps) {
     filter.includes("nft"),
     filter.includes("ft")
   ]);
-  const [filteredContracts, setFilteredContracts] = useState([]);
   const filterNames = [
     "read-only methods",
     "public methods",
@@ -46,7 +47,24 @@ export default function Home({ contracts }: HomeProps) {
         setFilteredContracts(arr => [...arr, contract]);
       }
     });
-  }, [contracts, included]);
+  }, [contracts, included, searchTerm]);
+
+  function renderSearch() {
+    return (
+      <Box p="4">
+        <Input
+          value={searchTerm}
+          onChange={e => handleSearch(e)}
+          placeholder="Try searching for nft-mint ..."
+          size="lg"
+        />
+      </Box>
+    );
+  }
+
+  function handleSearch(e) {
+    setSearchTerm(e.target.value);
+  }
 
   function renderFilter(color) {
     return (
@@ -81,6 +99,14 @@ export default function Home({ contracts }: HomeProps) {
   function isIncluded(contract: ClarityContractSerialized) {
     let matching = true;
 
+    // exclude by search
+    if (
+      (contract.source.match(new RegExp(searchTerm, "gi")) || []).length === 0
+    ) {
+      return false;
+    }
+
+    // exclude by filter
     included.forEach((active, i) => {
       if (active) {
         switch (i) {
@@ -117,8 +143,8 @@ export default function Home({ contracts }: HomeProps) {
   return (
     <Flex direction="column">
       <Header title="Search Clarity contracts" />
-      <Search />
-      {renderFilter(useColorModeValue("gray.100", "gray.700"))}
+      {renderSearch()}
+      {renderFilter(useColorModeValue("teal.50", "teal.900"))}
       <Text
         align="right"
         fontSize="sm"
