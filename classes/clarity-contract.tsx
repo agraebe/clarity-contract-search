@@ -1,3 +1,5 @@
+import { occurrences } from "../utils/occurances";
+
 export interface ClarityContractSerialized {
   id: string;
   name: string;
@@ -15,6 +17,7 @@ export interface ClarityContractSerialized {
   fts: number;
   useTraits: number;
   useContractCalls: number;
+  useBlockHeight: number;
 }
 
 export default class ClarityContract {
@@ -34,6 +37,7 @@ export default class ClarityContract {
   fts: number;
   useTraits: number;
   useContractCalls: number;
+  useBlockHeight: number;
 
   constructor(txId: string, id: string, source: string) {
     this.txId = txId;
@@ -43,37 +47,25 @@ export default class ClarityContract {
     this.sender = idArr[0];
     this.source = source;
 
-    this.scan(source);
+    this.scan();
   }
 
-  scan(source: string) {
-    this.publicMethods = (
-      source.match(new RegExp("define-public", "g")) || []
-    ).length;
-    this.readOnlyMethods = (
-      source.match(new RegExp("define-read-only", "g")) || []
-    ).length;
-    this.privateMethods = (
-      source.match(new RegExp("define-private", "g")) || []
-    ).length;
-    this.constants = (
-      source.match(new RegExp("define-constant", "g")) || []
-    ).length;
-    this.dataVars = (
-      source.match(new RegExp("define-data-var", "g")) || []
-    ).length;
-    this.maps = (source.match(new RegExp("define-map", "g")) || []).length;
-    this.traits = (source.match(new RegExp("define-trait", "g")) || []).length;
-    this.useTraits = (source.match(new RegExp("use-trait", "g")) || []).length;
-    this.nfts = (
-      source.match(new RegExp("define-non-fungible-token", "g")) || []
-    ).length;
-    this.fts = (
-      source.match(new RegExp("define-fungible-token", "g")) || []
-    ).length;
-    this.useContractCalls = (
-      source.match(new RegExp("contract-call?", "g")) || []
-    ).length;
+  scan() {
+    // declaration
+    this.publicMethods = occurrences(this.source, "define-public");
+    this.readOnlyMethods = occurrences(this.source, "define-read-only");
+    this.privateMethods = occurrences(this.source, "define-private");
+    this.constants = occurrences(this.source, "define-constant");
+    this.dataVars = occurrences(this.source, "define-data-var");
+    this.maps = occurrences(this.source, "define-map");
+    this.traits = occurrences(this.source, "define-trait");
+    this.nfts = occurrences(this.source, "define-non-fungible-token");
+    this.fts = occurrences(this.source, "define-fungible-token");
+
+    // usage
+    this.useTraits = occurrences(this.source, "use-trait");
+    this.useContractCalls = occurrences(this.source, "contract-call?");
+    this.useBlockHeight = occurrences(this.source, "block-height");
   }
 
   toJSON(): ClarityContractSerialized {
@@ -94,6 +86,7 @@ export default class ClarityContract {
       fts: this.fts,
       useTraits: this.useTraits,
       useContractCalls: this.useContractCalls,
+      useBlockHeight: this.useBlockHeight,
     };
   }
 }

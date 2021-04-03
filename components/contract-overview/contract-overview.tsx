@@ -39,6 +39,7 @@ export function ContractOverview({ contract }: SourceProps) {
           <TabPanel>
             {getTextElem(contract.useTraits, "traits")}
             {getTextElem(contract.useContractCalls, "contract calls")}
+            {getTextElem(contract.useBlockHeight, "block height")}
           </TabPanel>
         </TabPanels>
       </Tabs>

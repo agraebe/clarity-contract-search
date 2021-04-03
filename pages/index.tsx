@@ -6,8 +6,14 @@ import {
   Box,
   Text,
   useColorModeValue,
-  Input
+  Input,
+  InputGroup,
+  InputRightElement,
+  InputLeftElement,
+  Button,
+  CloseButton
 } from "@chakra-ui/react";
+import { SearchIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Footer } from "../components/footer/footer";
@@ -18,19 +24,22 @@ import ClarityContract, {
 } from "../classes/clarity-contract";
 
 export default function Home({ contracts }: HomeProps) {
-  const filter = useNextQueryParam("filter") || "";
+  const declareParam = useNextQueryParam("declare") || "";
+  const useParam = useNextQueryParam("use") || "";
+
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredContracts, setFilteredContracts] = useState([]);
+
   const [included, setIncluded] = useState([
-    filter.includes("readonly"),
-    filter.includes("public"),
-    filter.includes("const"),
-    filter.includes("datavar"),
-    filter.includes("map"),
-    filter.includes("nft"),
-    filter.includes("ft")
+    declareParam.includes("readonly"),
+    declareParam.includes("public"),
+    declareParam.includes("const"),
+    declareParam.includes("datavar"),
+    declareParam.includes("map"),
+    declareParam.includes("nft"),
+    declareParam.includes("ft")
   ]);
-  const filterNames = [
+  const declarationFilterNames = [
     "read-only methods",
     "public methods",
     "constants",
@@ -40,58 +49,143 @@ export default function Home({ contracts }: HomeProps) {
     "fungible tokens"
   ];
 
+  const [using, setUsing] = useState([
+    useParam.includes("trait"),
+    useParam.includes("call"),
+    useParam.includes("height")
+  ]);
+  const usageFilterNames = ["traits", "contract calls", "block height"];
+
   useEffect(() => {
+    filterContracts();
+  }, [contracts, included, using]);
+
+  useEffect(() => {
+    if (searchTerm === "") {
+      filterContracts();
+    }
+  }, [searchTerm]);
+
+  function filterContracts() {
     setFilteredContracts([]);
     contracts.forEach((contract, i) => {
       if (isIncluded(contract)) {
         setFilteredContracts(arr => [...arr, contract]);
       }
     });
-  }, [contracts, included, searchTerm]);
+  }
 
   function renderSearch() {
     return (
       <Box p="4">
-        <Input
-          value={searchTerm}
-          onChange={e => handleSearch(e)}
-          placeholder="Try searching for nft-mint ..."
-          size="lg"
-        />
+        <InputGroup size="lg">
+          <InputLeftElement
+            children={
+              searchTerm === "" ? (
+                <SearchIcon />
+              ) : (
+                <CloseButton
+                  onClick={() => {
+                    setSearchTerm("");
+                    filterContracts();
+                  }}
+                />
+              )
+            }
+          />
+          <Input
+            placeholder="Try searching for stack-stx"
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === "Enter") {
+                filterContracts();
+              }
+            }}
+          />
+          <InputRightElement
+            width="5.5rem"
+            children={
+              <Button
+                variant="ghost"
+                onClick={() => filterContracts()}
+                isDisabled={searchTerm === ""}
+                size="sm"
+                _hover={{
+                  bgGradient: "linear(to-r, green.200, pink.500)"
+                }}
+              >
+                Search
+              </Button>
+            }
+          />
+        </InputGroup>
       </Box>
     );
   }
 
-  function handleSearch(e) {
-    setSearchTerm(e.target.value);
+  function renderDeclareFilter() {
+    return (
+      <Stack p="4" spacing={6} direction="row">
+        <Text>Must declare</Text>
+        {included.map((elem, i) => {
+          return (
+            <Checkbox
+              isChecked={elem}
+              key={`checkbox-${i}`}
+              onChange={e => {
+                let newArr = [...included];
+                newArr.map((data, index) => {
+                  if (i === index) {
+                    newArr[index] = e.target.checked;
+                    return;
+                  }
+                });
+                setIncluded(newArr);
+              }}
+            >
+              {declarationFilterNames[i]}
+            </Checkbox>
+          );
+        })}
+      </Stack>
+    );
+  }
+
+  function renderUsageFilter() {
+    return (
+      <Stack p="4" spacing={6} direction="row">
+        <Text>Must use</Text>
+        {using.map((elem, i) => {
+          return (
+            <Checkbox
+              isChecked={elem}
+              key={`checkbox-${i}`}
+              onChange={e => {
+                let newArr = [...using];
+                newArr.map((data, index) => {
+                  if (i === index) {
+                    newArr[index] = e.target.checked;
+                    return;
+                  }
+                });
+                setUsing(newArr);
+              }}
+            >
+              {usageFilterNames[i]}
+            </Checkbox>
+          );
+        })}
+      </Stack>
+    );
   }
 
   function renderFilter(color) {
     return (
-      <Box m="4" borderRadius="lg" p="4" bg={color}>
-        <Text>Only contracts that declare ...</Text>
-        <Stack p="2" spacing={6} direction="row">
-          {included.map((elem, i) => {
-            return (
-              <Checkbox
-                isChecked={elem}
-                key={`checkbox-${i}`}
-                onChange={e => {
-                  let newArr = [...included];
-                  newArr.map((data, index) => {
-                    if (i === index) {
-                      newArr[index] = e.target.checked;
-                      return;
-                    }
-                  });
-                  setIncluded(newArr);
-                }}
-              >
-                {filterNames[i]}
-              </Checkbox>
-            );
-          })}
-        </Stack>
+      <Box m="4" boxShadow="base" borderRadius="lg" p="4" bg={color}>
+        {renderSearch()}
+        {renderDeclareFilter()}
+        {renderUsageFilter()}
       </Box>
     );
   }
@@ -101,12 +195,12 @@ export default function Home({ contracts }: HomeProps) {
 
     // exclude by search
     if (
-      (contract.source.match(new RegExp(searchTerm, "gi")) || []).length === 0
+      contract.source.toLowerCase().indexOf(searchTerm.toLowerCase()) === -1
     ) {
       return false;
     }
 
-    // exclude by filter
+    // exclude by declaration filter
     included.forEach((active, i) => {
       if (active) {
         switch (i) {
@@ -137,14 +231,32 @@ export default function Home({ contracts }: HomeProps) {
       }
     });
 
+    // exclude by usage filter
+    using.forEach((active, i) => {
+      if (active) {
+        switch (i) {
+          case 0:
+            if (!contract.useTraits) matching = false;
+            break;
+          case 1:
+            if (!contract.useContractCalls) matching = false;
+            break;
+          case 2:
+            if (!contract.useBlockHeight) matching = false;
+            break;
+          default:
+            break;
+        }
+      }
+    });
+
     return matching;
   }
 
   return (
     <Flex direction="column">
       <Header title="Search Clarity contracts" />
-      {renderSearch()}
-      {renderFilter(useColorModeValue("teal.50", "teal.900"))}
+      {renderFilter(useColorModeValue("gray.50", "gray.700"))}
       <Text
         align="right"
         fontSize="sm"
