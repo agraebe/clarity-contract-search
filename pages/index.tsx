@@ -308,7 +308,9 @@ export default function Home({ contracts }: HomeProps) {
         pt="4"
         color={useColorModeValue("gray.800", "gray.100")}
       >
-        showing {filteredContracts.length} contracts
+        {filteredContracts.length === 0
+          ? `loading contracts`
+          : `showing ${filteredContracts.length} contracts`}
       </Text>
       <Contracts contracts={filteredContracts} />
       <Footer>

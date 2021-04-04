@@ -1,5 +1,13 @@
 import React from "react";
-import { Box, Flex, Link, Text, Progress } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Link,
+  Text,
+  Progress,
+  Skeleton,
+  HStack
+} from "@chakra-ui/react";
 import Prism from "prismjs";
 import { clarity } from "../code/clarity";
 import { CodeBlock } from "../code/code";
@@ -9,6 +17,10 @@ import { ClarityContractSerialized } from "../../classes/clarity-contract";
 clarity(Prism);
 
 export function Contracts(props: ContractProps) {
+  if (props.contracts.length === 0) {
+    return renderSkeleton();
+  }
+
   return (
     <Box p="4">
       {props.contracts.map((contract, i) => {
@@ -25,18 +37,13 @@ export function Contracts(props: ContractProps) {
                 </Link>
               </Box>
               <Box w="250px">
-                <Text
-                  bgGradient="linear(red.100 0%, orange.100 25%, yellow.100 50%)"
-                  bgClip="text"
-                  className="complexOverlay"
-                  as="kbd"
-                >
+                <Text className="complexOverlay" as="kbd">
                   complexity
                 </Text>
                 <Progress
                   borderRadius="md"
                   size="lg"
-                  colorScheme="blackAlpha"
+                  colorScheme="progress"
                   value={contract.complexity}
                 />
               </Box>
@@ -49,6 +56,25 @@ export function Contracts(props: ContractProps) {
         );
       })}
     </Box>
+  );
+}
+
+function renderSkeleton() {
+  return (
+    <HStack pt="8" m="4">
+      <Skeleton
+        startColor="pink.500"
+        endColor="orange.500"
+        height="200px"
+        flex="1"
+      />
+      <Skeleton
+        width="250px"
+        startColor="pink.500"
+        endColor="orange.500"
+        height="200px"
+      />
+    </HStack>
   );
 }
 
