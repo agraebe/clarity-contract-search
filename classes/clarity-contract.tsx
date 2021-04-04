@@ -27,6 +27,7 @@ export interface ClarityContractSerialized {
   useGetSupply: number;
   complexity: number;
   blockTime: number;
+  recentUsage: number;
 }
 
 export default class ClarityContract {
@@ -56,8 +57,15 @@ export default class ClarityContract {
   useGetSupply: number;
   complexity: number;
   blockTime: number;
+  recentUsage: number;
 
-  constructor(txId: string, id: string, source: string, blockTime: number) {
+  constructor(
+    txId: string,
+    id: string,
+    source: string,
+    blockTime: number,
+    recentUsage: number
+  ) {
     this.txId = txId;
     this.id = id;
     const idArr = id.split(".");
@@ -65,7 +73,7 @@ export default class ClarityContract {
     this.sender = idArr[0];
     this.source = source;
     this.blockTime = blockTime;
-
+    this.recentUsage = recentUsage;
     this.scan();
   }
 
@@ -146,6 +154,7 @@ export default class ClarityContract {
       useGetSupply: this.useGetSupply,
       complexity: this.complexity,
       blockTime: this.blockTime,
+      recentUsage: this.recentUsage,
     };
   }
 }

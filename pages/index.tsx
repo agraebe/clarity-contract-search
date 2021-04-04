@@ -35,7 +35,8 @@ export default function Home() {
 
   const sortOrders = [
     { label: "Most recently deployed", tag: "recent" },
-    { label: "Most complex", tag: "complex" }
+    { label: "Most complex", tag: "complex" },
+    { label: "Most contract calls", tag: "calls" }
   ];
   const [sortOrder, setSortOrder] = useState(sortOrders[0]);
 
@@ -90,28 +91,46 @@ export default function Home() {
   // contracts need to be loaded initially
   useEffect(() => {
     const newContracts = [];
+    const contractCalls = new Map();
+
     fetch(
-      "https://stacks-node-api.mainnet.stacks.co/extended/v1/tx/?limit=200&type=smart_contract"
+      "https://stacks-node-api.mainnet.stacks.co/extended/v1/tx/?limit=200&type=contract_call"
     ).then(resp => {
       resp.json().then(data => {
-        // filter for success txs
-        const successTxs = data.results.filter(
-          tx => tx.tx_status === "success"
-        );
-
-        // instantiate contract instances
-        successTxs.forEach(tx => {
-          newContracts.push(
-            new ClarityContract(
-              tx.tx_id,
-              tx.smart_contract.contract_id,
-              tx.smart_contract.source_code,
-              tx.burn_block_time
-            ).toJSON()
-          );
+        data.results.map(elem => {
+          contractCalls.has(elem.contract_call.contract_id)
+            ? contractCalls.set(
+                elem.contract_call.contract_id,
+                contractCalls.get(elem.contract_call.contract_id) + 1
+              )
+            : contractCalls.set(elem.contract_call.contract_id, 0);
         });
 
-        setContracts(newContracts);
+        fetch(
+          "https://stacks-node-api.mainnet.stacks.co/extended/v1/tx/?limit=200&type=smart_contract"
+        ).then(resp => {
+          resp.json().then(data => {
+            // filter for success txs
+            const successTxs = data.results.filter(
+              tx => tx.tx_status === "success"
+            );
+
+            // instantiate contract instances
+            successTxs.forEach(tx => {
+              newContracts.push(
+                new ClarityContract(
+                  tx.tx_id,
+                  tx.smart_contract.contract_id,
+                  tx.smart_contract.source_code,
+                  tx.burn_block_time,
+                  contractCalls.get(tx.smart_contract.contract_id)
+                ).toJSON()
+              );
+            });
+
+            setContracts(newContracts);
+          });
+        });
       });
     });
   }, []);

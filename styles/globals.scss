@@ -59,6 +59,7 @@ pre[class*="language-"] {
   text-align: left;
   padding: 0.5em;
   overflow: scroll;
+  min-height: 240px;
 }
 
 .copyWrapper {
@@ -72,9 +73,5 @@ pre[class*="language-"] {
 }
 
 .complexOverlay {
-  position: relative;
-  left: 37%;
-  top: 17px;
   font-size: 7pt;
-  z-index: 2;
 }

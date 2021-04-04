@@ -20,7 +20,7 @@ export function ContractOverview({ contract }: SourceProps) {
       borderRadius="lg"
       overflow="hidden"
     >
-      <Tabs isFitted variant="enclosed">
+      <Tabs isFitted>
         <TabList mb="1em">
           <Tab>Declaration</Tab>
           <Tab>Usage</Tab>

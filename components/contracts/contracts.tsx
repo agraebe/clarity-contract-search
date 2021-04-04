@@ -12,7 +12,6 @@ import Prism from "prismjs";
 import sort from "fast-sort";
 import { clarity } from "../code/clarity";
 import { CodeBlock } from "../code/code";
-import Principal from "../principal/principal";
 import ContractOverview from "../contract-overview/contract-overview";
 import { ClarityContractSerialized } from "../../classes/clarity-contract";
 clarity(Prism);
@@ -25,34 +24,18 @@ export function Contracts(props: ContractProps) {
   return (
     <Box p="4">
       {sort(props.contracts)
-        .desc(props.sort === "complex" ? "complexity" : "blockTime")
+        .desc(
+          props.sort === "complex"
+            ? "complexity"
+            : props.sort === "calls"
+            ? "recentUsage"
+            : "blockTime"
+        )
         .map((contract, i) => {
           return (
             <Box key={i} pt={i === 0 ? "0" : "8"}>
               <Flex direction="row" pt="2">
-                <Box flex="1">
-                  <Principal principal={contract.sender} />
-                  <Link
-                    href={`https://explorer.stacks.co/txid/${contract.txId}`}
-                    isExternal
-                  >
-                    {contract.name}
-                  </Link>
-                </Box>
-                <Box w="250px">
-                  <Text className="complexOverlay" as="kbd">
-                    complexity
-                  </Text>
-                  <Progress
-                    borderRadius="md"
-                    size="lg"
-                    colorScheme="progress"
-                    value={contract.complexity}
-                  />
-                </Box>
-              </Flex>
-              <Flex direction="row" pt="2">
-                <CodeBlock source={contract.source} prism={Prism} />
+                <CodeBlock contract={contract} prism={Prism} />
                 <ContractOverview contract={contract} />
               </Flex>
             </Box>
