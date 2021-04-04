@@ -25,6 +25,7 @@ export interface ClarityContractSerialized {
   useGetBalance: number;
   useGetOwner: number;
   useGetSupply: number;
+  complexity: number;
 }
 
 export default class ClarityContract {
@@ -52,6 +53,7 @@ export default class ClarityContract {
   useGetBalance: number;
   useGetOwner: number;
   useGetSupply: number;
+  complexity: number;
 
   constructor(txId: string, id: string, source: string) {
     this.txId = txId;
@@ -89,6 +91,28 @@ export default class ClarityContract {
     this.useGetBalance = occurrences(this.source, "-get-balance");
     this.useGetOwner = occurrences(this.source, "nft-get-owner?");
     this.useGetSupply = occurrences(this.source, "ft-get-supply");
+
+    // complexity
+    this.complexity =
+      this.publicMethods +
+      this.readOnlyMethods +
+      this.privateMethods +
+      this.constants +
+      this.dataVars +
+      this.maps +
+      this.traits +
+      this.nfts +
+      this.fts +
+      this.useTrait +
+      this.useContractCalls +
+      this.useBlockHeight +
+      this.useBlockInfo +
+      this.useBurn +
+      this.useMint +
+      this.useTransfer +
+      this.useGetBalance +
+      this.useGetOwner +
+      this.useGetSupply;
   }
 
   toJSON(): ClarityContractSerialized {
@@ -117,6 +141,7 @@ export default class ClarityContract {
       useGetBalance: this.useGetBalance,
       useGetOwner: this.useGetOwner,
       useGetSupply: this.useGetSupply,
+      complexity: this.complexity,
     };
   }
 }
