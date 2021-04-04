@@ -6,7 +6,8 @@ import {
   TabList,
   Tab,
   TabPanels,
-  TabPanel
+  TabPanel,
+  useColorModeValue
 } from "@chakra-ui/react";
 import { ClarityContractSerialized } from "../../classes/clarity-contract";
 
@@ -20,12 +21,26 @@ export function ContractOverview({ contract }: SourceProps) {
       borderRadius="lg"
       overflow="hidden"
     >
-      <Tabs isFitted>
+      <Tabs isFitted variant="unstyled" bg="#2a2734">
         <TabList mb="1em">
-          <Tab>Declaration</Tab>
-          <Tab>Usage</Tab>
+          <Tab
+            _selected={{
+              height: "62px",
+              bg: useColorModeValue("gray.50", "gray.700")
+            }}
+          >
+            Declaration
+          </Tab>
+          <Tab
+            _selected={{
+              height: "62px",
+              bg: useColorModeValue("gray.50", "gray.700")
+            }}
+          >
+            Usage
+          </Tab>
         </TabList>
-        <TabPanels>
+        <TabPanels height="220px">
           <TabPanel>
             {getTextElem(contract.readOnlyMethods, "read-only methods")}
             {getTextElem(contract.publicMethods, "public methods")}

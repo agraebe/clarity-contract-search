@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Flex,
-  Link,
-  Text,
-  Progress,
-  Skeleton,
-  HStack
-} from "@chakra-ui/react";
+import { Box, Flex, Skeleton, HStack } from "@chakra-ui/react";
 import Prism from "prismjs";
 import sort from "fast-sort";
 import { clarity } from "../code/clarity";

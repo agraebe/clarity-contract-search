@@ -237,57 +237,66 @@ export default function Home() {
 
   function renderDeclareFilter() {
     return (
-      <Stack p="4" spacing={6} direction="row">
-        <Text>Must declare</Text>
-        {included.map((elem, i) => {
-          return (
-            <Checkbox
-              isChecked={elem}
-              key={`checkbox-${i}`}
-              onChange={e => {
-                let newArr = [...included];
-                newArr.map((data, index) => {
-                  if (i === index) {
-                    newArr[index] = e.target.checked;
-                    return;
-                  }
-                });
-                setIncluded(newArr);
-              }}
-            >
-              {declarationFilterNames[i].label}
-            </Checkbox>
-          );
-        })}
-      </Stack>
+      <Box p="4">
+        <Text mb="4" fontWeight="bold">
+          Must declare
+        </Text>
+        <Stack spacing={6} direction="row" align="stretch">
+          {included.map((elem, i) => {
+            return (
+              <Checkbox
+                isChecked={elem}
+                key={`checkbox-${i}`}
+                onChange={e => {
+                  let newArr = [...included];
+                  newArr.map((data, index) => {
+                    if (i === index) {
+                      newArr[index] = e.target.checked;
+                      return;
+                    }
+                  });
+                  setIncluded(newArr);
+                }}
+              >
+                {declarationFilterNames[i].label}
+              </Checkbox>
+            );
+          })}
+        </Stack>
+      </Box>
     );
   }
 
   function renderUsageFilter() {
     return (
-      <Stack p="4" spacing={6} direction="row">
-        <Text>Must use</Text>
-        {using.map((elem, i) => {
-          return (
-            <Checkbox
-              isChecked={elem}
-              key={`checkbox-${i}`}
-              onChange={e => {
-                let newArr = [...using];
-                newArr.map((data, index) => {
-                  if (i === index) {
-                    newArr[index] = e.target.checked;
-                    return;
-                  }
-                });
-                setUsing(newArr);
-              }}
-            >
-              {usageFilterNames[i].label}
-            </Checkbox>
-          );
-        })}
-      </Stack>
+      <Box p="4">
+        <Text fontWeight="bold" mb="4">
+          Must declare
+        </Text>
+        <Stack spacing={6} direction="row" align="stretch">
+          <Text>Must use</Text>
+          {using.map((elem, i) => {
+            return (
+              <Checkbox
+                isChecked={elem}
+                key={`checkbox-${i}`}
+                onChange={e => {
+                  let newArr = [...using];
+                  newArr.map((data, index) => {
+                    if (i === index) {
+                      newArr[index] = e.target.checked;
+                      return;
+                    }
+                  });
+                  setUsing(newArr);
+                }}
+              >
+                {usageFilterNames[i].label}
+              </Checkbox>
+            );
+          })}
+        </Stack>
+      </Box>
     );
   }
 
