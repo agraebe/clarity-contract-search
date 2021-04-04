@@ -65,18 +65,8 @@ export function Contracts(props: ContractProps) {
 function renderSkeleton() {
   return (
     <HStack pt="8" m="4">
-      <Skeleton
-        startColor="pink.500"
-        endColor="orange.500"
-        height="200px"
-        flex="1"
-      />
-      <Skeleton
-        width="250px"
-        startColor="pink.500"
-        endColor="orange.500"
-        height="200px"
-      />
+      <Skeleton height="200px" flex="1" />
+      <Skeleton width="250px" height="200px" />
     </HStack>
   );
 }

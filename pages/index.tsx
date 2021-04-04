@@ -24,12 +24,13 @@ import ClarityContract, {
   ClarityContractSerialized
 } from "../classes/clarity-contract";
 
-export default function Home({ contracts }: HomeProps) {
+export default function Home() {
   const router = useRouter();
   const declareParam = useNextQueryParam("declare") || "";
   const useParam = useNextQueryParam("use") || "";
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [contracts, setContracts] = useState([]);
   const [filteredContracts, setFilteredContracts] = useState([]);
 
   const sortOrders = [
@@ -85,6 +86,35 @@ export default function Home({ contracts }: HomeProps) {
     useParam.includes(usageFilterNames[8].query),
     useParam.includes(usageFilterNames[9].query)
   ]);
+
+  // contracts need to be loaded initially
+  useEffect(() => {
+    const newContracts = [];
+    fetch(
+      "https://stacks-node-api.mainnet.stacks.co/extended/v1/tx/?limit=200&type=smart_contract"
+    ).then(resp => {
+      resp.json().then(data => {
+        // filter for success txs
+        const successTxs = data.results.filter(
+          tx => tx.tx_status === "success"
+        );
+
+        // instantiate contract instances
+        successTxs.forEach(tx => {
+          newContracts.push(
+            new ClarityContract(
+              tx.tx_id,
+              tx.smart_contract.contract_id,
+              tx.smart_contract.source_code,
+              tx.burn_block_time
+            ).toJSON()
+          );
+        });
+
+        setContracts(newContracts);
+      });
+    });
+  }, []);
 
   // contracts need to be filtered
   useEffect(() => {
@@ -405,45 +435,4 @@ export function useNextQueryParam(key: string) {
   }, [router.asPath, key]);
 
   return value;
-}
-
-export async function getStaticProps() {
-  const apiUrl =
-    "https://stacks-node-api.mainnet.stacks.co/extended/v1/tx/?limit=200&type=smart_contract";
-  let data = {
-    results: []
-  };
-  const contracts = [];
-
-  data = await fetchData(apiUrl);
-
-  // filter for success txs
-  (data as any) = data.results.filter(tx => tx.tx_status === "success");
-
-  // instantiate contract instances
-  (data as any).forEach(tx => {
-    contracts.push(
-      new ClarityContract(
-        tx.tx_id,
-        tx.smart_contract.contract_id,
-        tx.smart_contract.source_code,
-        tx.burn_block_time
-      ).toJSON()
-    );
-  });
-
-  return {
-    props: {
-      contracts
-    }
-  };
-}
-
-async function fetchData(url) {
-  const query = await fetch(url);
-  return await query.json();
-}
-
-interface HomeProps {
-  contracts: ClarityContractSerialized[];
 }
