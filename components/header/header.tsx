@@ -28,6 +28,17 @@ export default function Header(props: HeaderProps) {
         >
           {props.title}
         </Text>
+        <Text
+          bgGradient={
+            colorMode === "light"
+              ? "linear(to-l, #7928CA,#FF0080)"
+              : "linear(to-r, green.200, pink.500)"
+          }
+          bgClip="text"
+          fontSize="md"
+        >
+          {props.sub}
+        </Text>
       </Box>
       <Spacer />
       <Box alignSelf="center">
@@ -50,4 +61,5 @@ export default function Header(props: HeaderProps) {
 
 interface HeaderProps {
   title: string;
+  sub: string;
 }

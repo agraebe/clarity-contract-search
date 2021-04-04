@@ -24,67 +24,104 @@ import ClarityContract, {
 } from "../classes/clarity-contract";
 
 export default function Home({ contracts }: HomeProps) {
+  const router = useRouter();
   const declareParam = useNextQueryParam("declare") || "";
   const useParam = useNextQueryParam("use") || "";
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredContracts, setFilteredContracts] = useState([]);
 
-  const [included, setIncluded] = useState([
-    declareParam.includes("readonly"),
-    declareParam.includes("public"),
-    declareParam.includes("const"),
-    declareParam.includes("datavar"),
-    declareParam.includes("map"),
-    declareParam.includes("nft"),
-    declareParam.includes("ft"),
-    declareParam.includes("trait")
-  ]);
   const declarationFilterNames = [
-    "read-only methods",
-    "public methods",
-    "constants",
-    "data variables",
-    "maps",
-    "non-fungible tokens",
-    "fungible tokens",
-    "traits"
+    { label: "read-only methods", query: "readonly" },
+    { label: "public methods", query: "public" },
+    { label: "constants", query: "const" },
+    { label: "data variables", query: "datavar" },
+    { label: "maps", query: "map" },
+    { label: "non-fungible tokens", query: "nft" },
+    { label: "fungible tokens", query: "ft" },
+    { label: "traits", query: "trait" }
+  ];
+
+  const [included, setIncluded] = useState([
+    declareParam.includes(declarationFilterNames[0].query),
+    declareParam.includes(declarationFilterNames[1].query),
+    declareParam.includes(declarationFilterNames[2].query),
+    declareParam.includes(declarationFilterNames[3].query),
+    declareParam.includes(declarationFilterNames[4].query),
+    declareParam.includes(declarationFilterNames[5].query),
+    declareParam.includes(declarationFilterNames[6].query),
+    declareParam.includes(declarationFilterNames[7].query)
+  ]);
+
+  const usageFilterNames = [
+    { label: "trait", query: "trait" },
+    { label: "contract calls", query: "call" },
+    { label: "block height", query: "blockheight" },
+    { label: "block info", query: "blockinfo" },
+    { label: "burns", query: "burn" },
+    { label: "mints", query: "mint" },
+    { label: "transfers", query: "transfer" },
+    { label: "get balance", query: "balance" },
+    { label: "get owner", query: "owner" },
+    { label: "get supply", query: "supply" }
   ];
 
   const [using, setUsing] = useState([
-    useParam.includes("trait"),
-    useParam.includes("call"),
-    useParam.includes("blockheight"),
-    useParam.includes("blockinfo"),
-    useParam.includes("burn"),
-    useParam.includes("mint"),
-    useParam.includes("transfer"),
-    useParam.includes("balance"),
-    useParam.includes("owner"),
-    useParam.includes("supply")
+    useParam.includes(usageFilterNames[0].query),
+    useParam.includes(usageFilterNames[1].query),
+    useParam.includes(usageFilterNames[2].query),
+    useParam.includes(usageFilterNames[3].query),
+    useParam.includes(usageFilterNames[4].query),
+    useParam.includes(usageFilterNames[5].query),
+    useParam.includes(usageFilterNames[6].query),
+    useParam.includes(usageFilterNames[7].query),
+    useParam.includes(usageFilterNames[8].query),
+    useParam.includes(usageFilterNames[9].query)
   ]);
-  const usageFilterNames = [
-    "trait",
-    "contract calls",
-    "block height",
-    "block info",
-    "burns",
-    "mints",
-    "transfers",
-    "get balance",
-    "get owner",
-    "get supply"
-  ];
 
+  // contracts need to be filtered
   useEffect(() => {
     filterContracts();
   }, [contracts, included, using]);
 
+  // search update
   useEffect(() => {
     if (searchTerm === "") {
       filterContracts();
     }
   }, [searchTerm]);
+
+  // url query needs to be set
+  useEffect(() => {
+    let filterQuery = declarationFilterNames.filter((elem, i) => included[i]);
+    let useQuery = usageFilterNames.filter((elem, i) => using[i]);
+
+    if (filterQuery.length > 0) {
+      (filterQuery as any) = filterQuery
+        .map(elem => elem.query)
+        .reduce(
+          (accumulator, currentValue) => `${accumulator},${currentValue}`
+        );
+    }
+
+    if (useQuery.length > 0) {
+      (useQuery as any) = useQuery
+        .map(elem => elem.query)
+        .reduce(
+          (accumulator, currentValue) => `${accumulator},${currentValue}`
+        );
+    }
+
+    console.log(typeof filterQuery);
+
+    router.push(
+      `/?declare=${typeof filterQuery === "string" ? filterQuery : ""}&use=${
+        typeof useQuery === "string" ? useQuery : ""
+      }`,
+      undefined,
+      { shallow: true }
+    );
+  }, [included, using]);
 
   function filterContracts() {
     setFilteredContracts([]);
@@ -164,7 +201,7 @@ export default function Home({ contracts }: HomeProps) {
                 setIncluded(newArr);
               }}
             >
-              {declarationFilterNames[i]}
+              {declarationFilterNames[i].label}
             </Checkbox>
           );
         })}
@@ -192,7 +229,7 @@ export default function Home({ contracts }: HomeProps) {
                 setUsing(newArr);
               }}
             >
-              {usageFilterNames[i]}
+              {usageFilterNames[i].label}
             </Checkbox>
           );
         })}
@@ -299,7 +336,10 @@ export default function Home({ contracts }: HomeProps) {
 
   return (
     <Flex direction="column">
-      <Header title="Search Clarity contracts" />
+      <Header
+        title="Clarity contracts"
+        sub={`${contracts.length} successfully deployed mainnet contracts`}
+      />
       {renderFilter(useColorModeValue("gray.50", "gray.700"))}
       <Text
         align="right"
@@ -349,7 +389,6 @@ export async function getStaticProps() {
   };
   const contracts = [];
 
-  // cache miss, need to fetch
   data = await fetchData(apiUrl);
 
   // filter for success txs
