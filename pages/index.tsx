@@ -11,7 +11,8 @@ import {
   InputRightElement,
   InputLeftElement,
   Button,
-  CloseButton
+  CloseButton,
+  Select
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
@@ -30,6 +31,12 @@ export default function Home({ contracts }: HomeProps) {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredContracts, setFilteredContracts] = useState([]);
+
+  const sortOrders = [
+    { label: "Most recently deployed", tag: "recent" },
+    { label: "Most complex", tag: "complex" }
+  ];
+  const [sortOrder, setSortOrder] = useState(sortOrders[0]);
 
   const declarationFilterNames = [
     { label: "read-only methods", query: "readonly" },
@@ -111,8 +118,6 @@ export default function Home({ contracts }: HomeProps) {
           (accumulator, currentValue) => `${accumulator},${currentValue}`
         );
     }
-
-    console.log(typeof filterQuery);
 
     router.push(
       `/?declare=${typeof filterQuery === "string" ? filterQuery : ""}&use=${
@@ -247,6 +252,25 @@ export default function Home({ contracts }: HomeProps) {
     );
   }
 
+  function renderSort() {
+    return (
+      <Select
+        width="250px"
+        value={sortOrder.tag}
+        onChange={e =>
+          setSortOrder(sortOrders[(e.nativeEvent.target as any).selectedIndex])
+        }
+        variant="unstyled"
+      >
+        {sortOrders.map(elem => (
+          <option key={`option-${elem.tag}`} value={elem.tag}>
+            {elem.label}
+          </option>
+        ))}
+      </Select>
+    );
+  }
+
   function isIncluded(contract: ClarityContractSerialized) {
     let matching = true;
 
@@ -341,18 +365,20 @@ export default function Home({ contracts }: HomeProps) {
         sub={`${contracts.length} successfully deployed mainnet contracts`}
       />
       {renderFilter(useColorModeValue("gray.50", "gray.700"))}
-      <Text
-        align="right"
-        fontSize="sm"
-        px="4"
-        pt="4"
-        color={useColorModeValue("gray.800", "gray.100")}
-      >
-        {filteredContracts.length === 0
-          ? `loading contracts`
-          : `showing ${filteredContracts.length} contracts`}
-      </Text>
-      <Contracts contracts={filteredContracts} />
+      <Flex direction="row" px="4" pt="4">
+        <Text
+          fontSize="md"
+          flex="1"
+          lineHeight="40px"
+          color={useColorModeValue("gray.800", "gray.100")}
+        >
+          {filteredContracts.length === 0
+            ? `loading contracts`
+            : `showing ${filteredContracts.length} contracts`}
+        </Text>
+        {renderSort()}
+      </Flex>
+      <Contracts contracts={filteredContracts} sort={sortOrder.tag} />
       <Footer>
         <a
           href="https://twitter.com/agraebe"
@@ -400,7 +426,8 @@ export async function getStaticProps() {
       new ClarityContract(
         tx.tx_id,
         tx.smart_contract.contract_id,
-        tx.smart_contract.source_code
+        tx.smart_contract.source_code,
+        tx.burn_block_time
       ).toJSON()
     );
   });

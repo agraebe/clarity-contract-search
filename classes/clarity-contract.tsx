@@ -26,6 +26,7 @@ export interface ClarityContractSerialized {
   useGetOwner: number;
   useGetSupply: number;
   complexity: number;
+  blockTime: number;
 }
 
 export default class ClarityContract {
@@ -54,14 +55,16 @@ export default class ClarityContract {
   useGetOwner: number;
   useGetSupply: number;
   complexity: number;
+  blockTime: number;
 
-  constructor(txId: string, id: string, source: string) {
+  constructor(txId: string, id: string, source: string, blockTime: number) {
     this.txId = txId;
     this.id = id;
     const idArr = id.split(".");
     this.name = idArr[1];
     this.sender = idArr[0];
     this.source = source;
+    this.blockTime = blockTime;
 
     this.scan();
   }
@@ -142,6 +145,7 @@ export default class ClarityContract {
       useGetOwner: this.useGetOwner,
       useGetSupply: this.useGetSupply,
       complexity: this.complexity,
+      blockTime: this.blockTime,
     };
   }
 }
