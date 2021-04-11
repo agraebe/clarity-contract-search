@@ -457,19 +457,7 @@ export default function Home() {
         {renderSort()}
       </Flex>
       <Contracts contracts={filteredContracts} sort={sortOrder.tag} />
-      <Footer>
-        <a
-          href="https://twitter.com/agraebe"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Made with{" "}
-          <span role="img" aria-label="love">
-            ❤️
-          </span>{" "}
-          by agraebe
-        </a>
-      </Footer>
+      <Footer />
     </Flex>
   );
 }

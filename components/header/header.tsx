@@ -5,7 +5,8 @@ import {
   Spacer,
   Text,
   useColorMode,
-  Button
+  Button,
+  Link
 } from "@chakra-ui/react";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import ColorSwitch from "../../components/color-switch/color-switch";
@@ -16,18 +17,20 @@ export default function Header(props: HeaderProps) {
   return (
     <Flex m={4}>
       <Box p="2">
-        <Text
-          bgGradient={
-            colorMode === "light"
-              ? "linear(to-l, #7928CA,#FF0080)"
-              : "linear(to-r, green.200, pink.500)"
-          }
-          bgClip="text"
-          fontSize="6xl"
-          fontWeight="extrabold"
-        >
-          {props.title}
-        </Text>
+        <Link href="/">
+          <Text
+            bgGradient={
+              colorMode === "light"
+                ? "linear(to-l, #7928CA,#FF0080)"
+                : "linear(to-r, green.200, pink.500)"
+            }
+            bgClip="text"
+            fontSize="6xl"
+            fontWeight="extrabold"
+          >
+            {props.title}
+          </Text>
+        </Link>
         <Text
           bgGradient={
             colorMode === "light"

@@ -24,6 +24,7 @@ import { ClarityContractSerialized } from "../../classes/clarity-contract";
 import ClarRef from "../../data/clarity-reference.json";
 
 export function CodeBlock(props: SourceProps) {
+  const color = useColorModeValue("gray.50", "gray.700");
   return (
     <Box
       mr="2"
@@ -33,41 +34,43 @@ export function CodeBlock(props: SourceProps) {
       overflow="hidden"
       className="codeWrapper"
     >
-      <Flex direction="row" p="2" bg={useColorModeValue("gray.50", "gray.700")}>
-        <Box flex="1">
-          <Principal principal={props.contract.sender} />
-          <Link
-            href={`https://explorer.stacks.co/txid/${props.contract.txId}`}
-            isExternal
-          >
-            {props.contract.name}
-          </Link>
-        </Box>
-        <Flex w="25%" direction="row">
-          <Box flex="1" px="2">
-            <Text className="complexOverlay" as="kbd">
-              contract calls
-            </Text>
-            <Progress
-              borderRadius="md"
-              size="xs"
-              colorScheme="orange"
-              value={props.contract.recentUsage}
-            />
+      {!props.noHeader && (
+        <Flex direction="row" p="2" bg={color}>
+          <Box flex="1">
+            <Principal principal={props.contract.sender} />
+            <Link
+              href={`https://explorer.stacks.co/txid/${props.contract.txId}`}
+              isExternal
+            >
+              {props.contract.name}
+            </Link>
           </Box>
-          <Box flex="1" px="2">
-            <Text className="complexOverlay" as="kbd">
-              complexity
-            </Text>
-            <Progress
-              borderRadius="md"
-              size="xs"
-              colorScheme="orange"
-              value={props.contract.complexity}
-            />
-          </Box>
+          <Flex w="25%" direction="row">
+            <Box flex="1" px="2">
+              <Text className="complexOverlay" as="kbd">
+                contract calls
+              </Text>
+              <Progress
+                borderRadius="md"
+                size="xs"
+                colorScheme="orange"
+                value={props.contract.recentUsage}
+              />
+            </Box>
+            <Box flex="1" px="2">
+              <Text className="complexOverlay" as="kbd">
+                complexity
+              </Text>
+              <Progress
+                borderRadius="md"
+                size="xs"
+                colorScheme="orange"
+                value={props.contract.complexity}
+              />
+            </Box>
+          </Flex>
         </Flex>
-      </Flex>
+      )}
       <Copy source={props.contract.source} />
       <Box overflow="scroll">
         <Highlight
@@ -149,6 +152,7 @@ function pad(n, width, z) {
 interface SourceProps {
   contract: ClarityContractSerialized;
   prism: object;
+  noHeader?: boolean;
 }
 
 export default React.memo(CodeBlock);
