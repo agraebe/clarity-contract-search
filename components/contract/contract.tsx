@@ -16,7 +16,6 @@ export function Contract(props: ContractProps) {
     <Box p="4">
       <Flex direction="row" pt="2">
         <CodeBlock contract={props.contract} prism={Prism} noHeader={true} />
-        <ContractOverview contract={props.contract} />
       </Flex>
     </Box>
   );

@@ -27,6 +27,8 @@ export default function Header(props: HeaderProps) {
             bgClip="text"
             fontSize="6xl"
             fontWeight="extrabold"
+            lineHeight="1.1em"
+            pb="2"
           >
             {props.title}
           </Text>
@@ -43,8 +45,8 @@ export default function Header(props: HeaderProps) {
           {props.sub}
         </Text>
       </Box>
-      <Spacer />
-      <Box alignSelf="center">
+      <Spacer display={{ base: "none", md: "block" }} />
+      <Box alignSelf="center" display={{ base: "none", md: "block" }}>
         <ColorSwitch />
         <Button
           ml="5"

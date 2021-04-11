@@ -300,7 +300,14 @@ export default function Home() {
 
   function renderFilter(color) {
     return (
-      <Box m="4" boxShadow="base" borderRadius="lg" p="4" bg={color}>
+      <Box
+        m="4"
+        boxShadow="base"
+        borderRadius="lg"
+        p="4"
+        bg={color}
+        display={{ base: "none", md: "block" }}
+      >
         {renderSearch()}
         <Accordion allowMultiple reduceMotion mt="4">
           <AccordionItem>
@@ -440,10 +447,17 @@ export default function Home() {
     <Flex direction="column">
       <Header
         title="Clarity contracts"
-        sub={`${contracts.length} successfully deployed mainnet contracts`}
+        sub={`${
+          contracts.length === 0 ? "loading" : contracts.length
+        } successfully deployed mainnet contracts`}
       />
       {renderFilter(useColorModeValue("gray.50", "gray.700"))}
-      <Flex direction="row" px="4" pt="4">
+      <Flex
+        direction="row"
+        px="4"
+        pt="4"
+        display={{ base: "none", md: "flex" }}
+      >
         <Text
           fontSize="md"
           flex="1"
