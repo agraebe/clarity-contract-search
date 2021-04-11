@@ -21,12 +21,16 @@ export function ContractOverview({ contract }: SourceProps) {
       borderRadius="lg"
       overflow="hidden"
     >
-      <Tabs isFitted variant="unstyled" bg="#2a2734">
+      <Tabs
+        isFitted
+        variant="unstyled"
+        bg={useColorModeValue("gray.50", "#2a2734")}
+      >
         <TabList mb="1em">
           <Tab
             _selected={{
               height: "62px",
-              bg: useColorModeValue("gray.50", "gray.700")
+              bg: useColorModeValue("gray.100", "gray.700")
             }}
           >
             Declaration
@@ -34,7 +38,7 @@ export function ContractOverview({ contract }: SourceProps) {
           <Tab
             _selected={{
               height: "62px",
-              bg: useColorModeValue("gray.50", "gray.700")
+              bg: useColorModeValue("gray.100", "gray.700")
             }}
           >
             Usage

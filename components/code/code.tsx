@@ -23,6 +23,7 @@ export function CodeBlock(props: SourceProps) {
       borderRadius="lg"
       flex="1"
       overflow="hidden"
+      className="codeWrapper"
     >
       <Flex direction="row" p="2" bg={useColorModeValue("gray.50", "gray.700")}>
         <Box flex="1">

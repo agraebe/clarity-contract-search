@@ -62,8 +62,13 @@ pre[class*="language-"] {
   min-height: 240px;
 }
 
+.codeWrapper:hover .copyWrapper {
+  display: block;
+}
+
 .copyWrapper {
   position: relative;
+  display: none;
 }
 
 .copyBtn {

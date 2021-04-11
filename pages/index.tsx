@@ -12,7 +12,12 @@ import {
   InputLeftElement,
   Button,
   CloseButton,
-  Select
+  Select,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
@@ -238,9 +243,6 @@ export default function Home() {
   function renderDeclareFilter() {
     return (
       <Box p="4">
-        <Text mb="4" fontWeight="bold">
-          Must declare
-        </Text>
         <Stack spacing={6} direction="row" align="stretch">
           {included.map((elem, i) => {
             return (
@@ -270,11 +272,7 @@ export default function Home() {
   function renderUsageFilter() {
     return (
       <Box p="4">
-        <Text fontWeight="bold" mb="4">
-          Must declare
-        </Text>
         <Stack spacing={6} direction="row" align="stretch">
-          <Text>Must use</Text>
           {using.map((elem, i) => {
             return (
               <Checkbox
@@ -304,8 +302,30 @@ export default function Home() {
     return (
       <Box m="4" boxShadow="base" borderRadius="lg" p="4" bg={color}>
         {renderSearch()}
-        {renderDeclareFilter()}
-        {renderUsageFilter()}
+        <Accordion allowMultiple reduceMotion mt="4">
+          <AccordionItem>
+            <h2>
+              <AccordionButton>
+                <Box flex="1" textAlign="left">
+                  Must declare
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+            </h2>
+            <AccordionPanel pb={4}>{renderDeclareFilter()}</AccordionPanel>
+          </AccordionItem>
+          <AccordionItem>
+            <h2>
+              <AccordionButton>
+                <Box flex="1" textAlign="left">
+                  Muse use
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+            </h2>
+            <AccordionPanel pb={4}>{renderUsageFilter()}</AccordionPanel>
+          </AccordionItem>
+        </Accordion>
       </Box>
     );
   }
