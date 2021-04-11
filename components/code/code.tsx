@@ -116,7 +116,6 @@ function renderRef(token, key, getTokenProps) {
   const func = ClarRef.functions.find(func => func.name === token.content);
   const keyw = ClarRef.keywords.find(func => func.name === token.content);
 
-  console.log(func, keyw);
   return (
     <Popover isLazy>
       <PopoverTrigger>

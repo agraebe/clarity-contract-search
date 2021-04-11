@@ -33,8 +33,9 @@ export default function Home() {
   const router = useRouter();
   const declareParam = useNextQueryParam("declare") || "";
   const useParam = useNextQueryParam("use") || "";
+  const searchParam = useNextQueryParam("search") || "";
 
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(searchParam);
   const [contracts, setContracts] = useState([]);
   const [filteredContracts, setFilteredContracts] = useState([]);
 
@@ -176,11 +177,11 @@ export default function Home() {
     router.push(
       `/?declare=${typeof filterQuery === "string" ? filterQuery : ""}&use=${
         typeof useQuery === "string" ? useQuery : ""
-      }`,
+      }&search=${searchTerm}`,
       undefined,
       { shallow: true }
     );
-  }, [included, using]);
+  }, [included, using, searchTerm]);
 
   function filterContracts() {
     setFilteredContracts([]);
@@ -470,7 +471,11 @@ export default function Home() {
         </Text>
         {renderSort()}
       </Flex>
-      <Contracts contracts={filteredContracts} sort={sortOrder.tag} />
+      <Contracts
+        contracts={filteredContracts}
+        sort={sortOrder.tag}
+        keywords={[searchTerm]}
+      />
       <Footer />
     </Flex>
   );

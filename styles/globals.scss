@@ -33,6 +33,10 @@ a {
   border-right-color: rgb(203, 207, 214);
 }
 
+.highlightedLine {
+  background-color: rgba(83, 155, 16, 0.356);
+}
+
 .lineNumber {
   display: flex;
   flex-shrink: 0;

@@ -58,7 +58,7 @@ export function CodeBlockMini(props: SourceProps) {
         </Flex>
       </Flex>
       <Copy source={props.contract.source} />
-      <Box h="240px" overflow="hidden">
+      <Box h="240px" overflow="scroll" className="codeView">
         <Highlight
           {...defaultProps}
           code={props.contract.source}
@@ -67,20 +67,26 @@ export function CodeBlockMini(props: SourceProps) {
         >
           {({ className, style, tokens, getLineProps, getTokenProps }) => (
             <pre className={className} style={style}>
-              {tokens.map((line, i) => (
-                <div
-                  className="line"
-                  key={i}
-                  {...getLineProps({ line, key: i })}
-                >
-                  <span className="lineNumber">{pad(i + 1, 3)}</span>
-                  <span className="lineContent">
-                    {line.map((token, key) => (
-                      <span key={key} {...getTokenProps({ token, key })} />
-                    ))}
-                  </span>
-                </div>
-              ))}
+              {tokens.map((line, i) => {
+                return (
+                  <div
+                    key={i}
+                    {...getLineProps({ line, key: i })}
+                    className={
+                      line.find(elem => elem.content.includes(props.keywords))
+                        ? "token-line highlightedLine"
+                        : "token-line"
+                    }
+                  >
+                    <span className="lineNumber">{pad(i + 1, 3)}</span>
+                    <span className="lineContent">
+                      {line.map((token, key) => (
+                        <span key={key} {...getTokenProps({ token, key })} />
+                      ))}
+                    </span>
+                  </div>
+                );
+              })}
             </pre>
           )}
         </Highlight>
@@ -98,6 +104,7 @@ function pad(n, width, z) {
 interface SourceProps {
   contract: ClarityContractSerialized;
   prism: object;
+  keywords?: Array<string>;
 }
 
 export default React.memo(CodeBlockMini);
