@@ -3,8 +3,7 @@ import { Box, Flex, Skeleton, HStack } from "@chakra-ui/react";
 import Prism from "prismjs";
 import sort from "fast-sort";
 import { clarity } from "../code/clarity";
-import { CodeBlock } from "../code/code";
-import ContractOverview from "../contract-overview/contract-overview";
+import { CodeBlockMini } from "../code/code-mini";
 import { ClarityContractSerialized } from "../../classes/clarity-contract";
 clarity(Prism);
 
@@ -27,8 +26,7 @@ export function Contracts(props: ContractProps) {
           return (
             <Box key={i} pt={i === 0 ? "0" : "8"}>
               <Flex direction="row" pt="2">
-                <CodeBlock contract={contract} prism={Prism} />
-                <ContractOverview contract={contract} />
+                <CodeBlockMini contract={contract} prism={Prism} />
               </Flex>
             </Box>
           );
@@ -40,8 +38,7 @@ export function Contracts(props: ContractProps) {
 function renderSkeleton() {
   return (
     <HStack pt="8" m="4">
-      <Skeleton height="200px" flex="1" />
-      <Skeleton width="250px" height="200px" />
+      <Skeleton height="200px" />
     </HStack>
   );
 }

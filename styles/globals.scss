@@ -73,10 +73,18 @@ pre[class*="language-"] {
 
 .copyBtn {
   position: absolute !important;
-  right: 20px;
-  top: 180px;
+  right: 10px;
+  top: 10px;
 }
 
 .complexOverlay {
   font-size: 7pt;
+}
+
+.refAvailable {
+  text-decoration: underline;
+}
+
+.refAvailable:hover {
+  cursor: pointer;
 }
