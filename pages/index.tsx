@@ -36,6 +36,7 @@ export default function Home() {
   const searchParam = useNextQueryParam("search") || "";
 
   const [searchTerm, setSearchTerm] = useState(searchParam);
+  const [searchInput, setSearchInput] = useState(searchParam);
   const [contracts, setContracts] = useState([]);
   const [filteredContracts, setFilteredContracts] = useState([]);
 
@@ -146,13 +147,6 @@ export default function Home() {
     filterContracts();
   }, [contracts, included, using]);
 
-  // search update
-  useEffect(() => {
-    if (searchTerm === "") {
-      filterContracts();
-    }
-  }, [searchTerm]);
-
   // url query needs to be set
   useEffect(() => {
     let filterQuery = declarationFilterNames.filter((elem, i) => included[i]);
@@ -198,11 +192,12 @@ export default function Home() {
         <InputGroup size="lg">
           <InputLeftElement
             children={
-              searchTerm === "" ? (
+              searchInput === "" ? (
                 <SearchIcon />
               ) : (
                 <CloseButton
                   onClick={() => {
+                    setSearchInput("");
                     setSearchTerm("");
                     filterContracts();
                   }}
@@ -212,10 +207,11 @@ export default function Home() {
           />
           <Input
             placeholder="Try searching for stack-stx"
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
+            value={searchInput}
+            onChange={e => setSearchInput(e.target.value)}
             onKeyDown={e => {
-              if (e.key === "Enter") {
+              if (e.key === "Enter" && searchInput !== "") {
+                setSearchTerm(searchInput);
                 filterContracts();
               }
             }}
@@ -225,8 +221,11 @@ export default function Home() {
             children={
               <Button
                 variant="ghost"
-                onClick={() => filterContracts()}
-                isDisabled={searchTerm === ""}
+                onClick={() => {
+                  setSearchTerm(searchInput);
+                  filterContracts();
+                }}
+                isDisabled={searchInput === ""}
                 size="sm"
                 _hover={{
                   bgGradient: "linear(to-r, green.200, pink.500)"
@@ -308,6 +307,7 @@ export default function Home() {
         p="4"
         bg={color}
         display={{ base: "none", md: "block" }}
+        id="filterView"
       >
         {renderSearch()}
         <Accordion allowMultiple reduceMotion mt="4">
@@ -474,7 +474,7 @@ export default function Home() {
       <Contracts
         contracts={filteredContracts}
         sort={sortOrder.tag}
-        keywords={[searchTerm]}
+        keywords={searchTerm === "" ? [] : [searchTerm]}
       />
       <Footer />
     </Flex>

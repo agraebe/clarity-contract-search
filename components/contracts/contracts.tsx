@@ -14,10 +14,14 @@ export function Contracts(props: ContractProps) {
       let elem;
 
       for (let i = 0; i < elements.length; i++) {
-        elements[i]
-          .getElementsByClassName("highlightedLine")[0]
-          .scrollIntoView();
+        if (elements[i].getElementsByClassName("highlightedLine")[0]) {
+          elements[i]
+            .getElementsByClassName("highlightedLine")[0]
+            .scrollIntoView();
+        }
       }
+
+      window.scrollTo(0, 0);
     }
   }, [props.contracts]);
 
@@ -26,7 +30,7 @@ export function Contracts(props: ContractProps) {
   }
 
   return (
-    <Box p="4">
+    <Box p="4" id="contractsView">
       {sort(props.contracts)
         .desc(
           props.sort === "complex"

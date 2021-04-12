@@ -73,6 +73,7 @@ export function CodeBlockMini(props: SourceProps) {
                     key={i}
                     {...getLineProps({ line, key: i })}
                     className={
+                      props.keywords.length > 0 &&
                       line.find(elem => elem.content.includes(props.keywords))
                         ? "token-line highlightedLine"
                         : "token-line"
