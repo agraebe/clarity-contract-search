@@ -1,7 +1,7 @@
-name: Refresh database every 5 minutes
+name: Refresh database every 10 minutes
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/10 * * * *"
 jobs:
   Redis-Update:
     runs-on: ubuntu-latest
@@ -10,6 +10,6 @@ jobs:
       - name: Deploy Stage
         uses: fjogeleit/http-request-action@master
         with:
-          url: 'https://clarity-search.dev/api/refresh'
+          url: "https://clarity-search.dev/api/refresh"
           timeout: 15000
       - run: echo ">>> Contract uploading completed!"
