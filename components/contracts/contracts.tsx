@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Box, Flex, Skeleton, HStack } from "@chakra-ui/react";
+import { Box, Skeleton, HStack } from "@chakra-ui/react";
 import Prism from "prismjs";
 import sort from "fast-sort";
 import { clarity } from "../code/clarity";
@@ -11,7 +11,6 @@ export function Contracts(props: ContractProps) {
   useEffect(() => {
     if (props.contracts.length > 0) {
       const elements = document.getElementsByClassName("codeView");
-      let elem;
 
       for (let i = 0; i < elements.length; i++) {
         if (elements[i].getElementsByClassName("highlightedLine")[0]) {

@@ -326,7 +326,7 @@ export default function Home() {
             <h2>
               <AccordionButton>
                 <Box flex="1" textAlign="left">
-                  Muse use
+                  Must use
                 </Box>
                 <AccordionIcon />
               </AccordionButton>

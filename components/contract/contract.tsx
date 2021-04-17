@@ -3,7 +3,6 @@ import { Box, Flex, Skeleton, HStack } from "@chakra-ui/react";
 import Prism from "prismjs";
 import { clarity } from "../code/clarity";
 import { CodeBlock } from "../code/code";
-import ContractOverview from "../contract-overview/contract-overview";
 import { ClarityContractSerialized } from "../../classes/clarity-contract";
 clarity(Prism);
 
