@@ -1,6 +1,15 @@
+import bluebird from "bluebird";
+import redis from "redis";
 import ClarityContract from "../../classes/clarity-contract";
 
 export default function handler(req, res) {
+  bluebird.promisifyAll(redis.RedisClient.prototype);
+  const cache = redis.createClient({
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT,
+    password: process.env.REDIS_PASSWORD
+  });
+
   const newContracts = [];
   const contractCalls = new Map();
 
@@ -20,7 +29,7 @@ export default function handler(req, res) {
       fetch(
         "https://stacks-node-api.mainnet.stacks.co/extended/v1/tx/?limit=200&type=smart_contract"
       ).then(resp => {
-        resp.json().then(data => {
+        resp.json().then(async data => {
           // filter for success txs
           const successTxs = data.results.filter(
             tx => tx.tx_status === "success"
@@ -39,6 +48,13 @@ export default function handler(req, res) {
             );
           });
 
+          // set cache to expire after 10 minutes
+          await cache.set(
+            "contracts",
+            JSON.stringify(newContracts),
+            "EX",
+            60 * 10
+          );
           res.status(200).json(newContracts);
         });
       });
