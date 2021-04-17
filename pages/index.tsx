@@ -17,19 +17,21 @@ import {
   AccordionItem,
   AccordionButton,
   AccordionPanel,
-  AccordionIcon
+  AccordionIcon,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import bluebird from "bluebird";
+import redis from "redis";
 import { Footer } from "../components/footer/footer";
 import Contracts from "../components/contracts/contracts";
 import Header from "../components/header/header";
 import ClarityContract, {
-  ClarityContractSerialized
+  ClarityContractSerialized,
 } from "../classes/clarity-contract";
 
-export default function Home() {
+export default function Home({ contracts }) {
   const router = useRouter();
   const declareParam = useNextQueryParam("declare") || "";
   const useParam = useNextQueryParam("use") || "";
@@ -37,13 +39,12 @@ export default function Home() {
 
   const [searchTerm, setSearchTerm] = useState(searchParam);
   const [searchInput, setSearchInput] = useState(searchParam);
-  const [contracts, setContracts] = useState([]);
   const [filteredContracts, setFilteredContracts] = useState([]);
 
   const sortOrders = [
     { label: "Most recently deployed", tag: "recent" },
     { label: "Most complex", tag: "complex" },
-    { label: "Most contract calls", tag: "calls" }
+    { label: "Most contract calls", tag: "calls" },
   ];
   const [sortOrder, setSortOrder] = useState(sortOrders[0]);
 
@@ -55,7 +56,7 @@ export default function Home() {
     { label: "maps", query: "map" },
     { label: "non-fungible tokens", query: "nft" },
     { label: "fungible tokens", query: "ft" },
-    { label: "traits", query: "trait" }
+    { label: "traits", query: "trait" },
   ];
 
   const [included, setIncluded] = useState([
@@ -66,7 +67,7 @@ export default function Home() {
     declareParam.includes(declarationFilterNames[4].query),
     declareParam.includes(declarationFilterNames[5].query),
     declareParam.includes(declarationFilterNames[6].query),
-    declareParam.includes(declarationFilterNames[7].query)
+    declareParam.includes(declarationFilterNames[7].query),
   ]);
 
   const usageFilterNames = [
@@ -79,7 +80,7 @@ export default function Home() {
     { label: "transfers", query: "transfer" },
     { label: "get balance", query: "balance" },
     { label: "get owner", query: "owner" },
-    { label: "get supply", query: "supply" }
+    { label: "get supply", query: "supply" },
   ];
 
   const [using, setUsing] = useState([
@@ -92,55 +93,8 @@ export default function Home() {
     useParam.includes(usageFilterNames[6].query),
     useParam.includes(usageFilterNames[7].query),
     useParam.includes(usageFilterNames[8].query),
-    useParam.includes(usageFilterNames[9].query)
+    useParam.includes(usageFilterNames[9].query),
   ]);
-
-  // contracts need to be loaded initially
-  useEffect(() => {
-    const newContracts = [];
-    const contractCalls = new Map();
-
-    fetch(
-      "https://stacks-node-api.mainnet.stacks.co/extended/v1/tx/?limit=200&type=contract_call"
-    ).then(resp => {
-      resp.json().then(data => {
-        data.results.map(elem => {
-          contractCalls.has(elem.contract_call.contract_id)
-            ? contractCalls.set(
-                elem.contract_call.contract_id,
-                contractCalls.get(elem.contract_call.contract_id) + 1
-              )
-            : contractCalls.set(elem.contract_call.contract_id, 0);
-        });
-
-        fetch(
-          "https://stacks-node-api.mainnet.stacks.co/extended/v1/tx/?limit=200&type=smart_contract"
-        ).then(resp => {
-          resp.json().then(data => {
-            // filter for success txs
-            const successTxs = data.results.filter(
-              tx => tx.tx_status === "success"
-            );
-
-            // instantiate contract instances
-            successTxs.forEach(tx => {
-              newContracts.push(
-                new ClarityContract(
-                  tx.tx_id,
-                  tx.smart_contract.contract_id,
-                  tx.smart_contract.source_code,
-                  tx.burn_block_time,
-                  contractCalls.get(tx.smart_contract.contract_id)
-                ).toJSON()
-              );
-            });
-
-            setContracts(newContracts);
-          });
-        });
-      });
-    });
-  }, []);
 
   // contracts need to be filtered
   useEffect(() => {
@@ -154,7 +108,7 @@ export default function Home() {
 
     if (filterQuery.length > 0) {
       (filterQuery as any) = filterQuery
-        .map(elem => elem.query)
+        .map((elem) => elem.query)
         .reduce(
           (accumulator, currentValue) => `${accumulator},${currentValue}`
         );
@@ -162,7 +116,7 @@ export default function Home() {
 
     if (useQuery.length > 0) {
       (useQuery as any) = useQuery
-        .map(elem => elem.query)
+        .map((elem) => elem.query)
         .reduce(
           (accumulator, currentValue) => `${accumulator},${currentValue}`
         );
@@ -181,7 +135,7 @@ export default function Home() {
     setFilteredContracts([]);
     contracts.forEach((contract, i) => {
       if (isIncluded(contract)) {
-        setFilteredContracts(arr => [...arr, contract]);
+        setFilteredContracts((arr) => [...arr, contract]);
       }
     });
   }
@@ -208,8 +162,8 @@ export default function Home() {
           <Input
             placeholder="Try searching for stack-stx"
             value={searchInput}
-            onChange={e => setSearchInput(e.target.value)}
-            onKeyDown={e => {
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={(e) => {
               if (e.key === "Enter" && searchInput !== "") {
                 setSearchTerm(searchInput);
                 filterContracts();
@@ -228,7 +182,7 @@ export default function Home() {
                 isDisabled={searchInput === ""}
                 size="sm"
                 _hover={{
-                  bgGradient: "linear(to-r, green.200, pink.500)"
+                  bgGradient: "linear(to-r, green.200, pink.500)",
                 }}
               >
                 Search
@@ -249,7 +203,7 @@ export default function Home() {
               <Checkbox
                 isChecked={elem}
                 key={`checkbox-${i}`}
-                onChange={e => {
+                onChange={(e) => {
                   let newArr = [...included];
                   newArr.map((data, index) => {
                     if (i === index) {
@@ -278,7 +232,7 @@ export default function Home() {
               <Checkbox
                 isChecked={elem}
                 key={`checkbox-${i}`}
-                onChange={e => {
+                onChange={(e) => {
                   let newArr = [...using];
                   newArr.map((data, index) => {
                     if (i === index) {
@@ -343,12 +297,12 @@ export default function Home() {
       <Select
         width="250px"
         value={sortOrder.tag}
-        onChange={e =>
+        onChange={(e) =>
           setSortOrder(sortOrders[(e.nativeEvent.target as any).selectedIndex])
         }
         variant="unstyled"
       >
-        {sortOrders.map(elem => (
+        {sortOrders.map((elem) => (
           <option key={`option-${elem.tag}`} value={elem.tag}>
             {elem.label}
           </option>
@@ -479,6 +433,23 @@ export default function Home() {
       <Footer />
     </Flex>
   );
+}
+
+export async function getStaticProps(context) {
+  bluebird.promisifyAll(redis.RedisClient.prototype);
+  const cache = redis.createClient({
+    host: process.env.REDIS_HOST,
+    port: process.env.REDIS_PORT,
+    password: process.env.REDIS_PASSWORD,
+  });
+
+  let contracts = JSON.parse(await cache.getAsync("contracts"));
+
+  return {
+    props: {
+      contracts,
+    },
+  };
 }
 
 export function useNextQueryParam(key: string) {
