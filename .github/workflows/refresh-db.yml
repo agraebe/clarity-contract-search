@@ -1,7 +1,8 @@
 name: Refresh database every 10 minutes
 on:
   schedule:
-    - cron: "*/10 * * * *"
+  - cron: "*/5 * * * *"
+
 jobs:
   Redis-Update:
     runs-on: ubuntu-latest
