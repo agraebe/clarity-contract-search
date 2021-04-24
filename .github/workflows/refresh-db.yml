@@ -15,5 +15,5 @@ jobs:
           url: "https://search-clarity.dev/api/refresh"
           timeout: 15000
       - name: Show counts
-          run: echo ${{ steps.req.outputs.response }}
+        run: echo ${{ steps.req.outputs.response }}
       - run: echo ">>> Contract uploading completed!"
