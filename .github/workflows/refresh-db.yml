@@ -8,9 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo ">>> Fetching new contracts now ..."
-      - name: Deploy Stage
+      - name: Make request
+        id: req
         uses: fjogeleit/http-request-action@master
         with:
           url: "https://search-clarity.dev/api/refresh"
           timeout: 15000
+      - name: Show counts
+          run: echo ${{ steps.req.outputs.response }}
       - run: echo ">>> Contract uploading completed!"
