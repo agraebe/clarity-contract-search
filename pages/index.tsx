@@ -447,7 +447,7 @@ export async function getStaticProps(context) {
 
   return {
     props: {
-      contracts
+      contracts: contracts? contracts : []
     }
   };
 }
