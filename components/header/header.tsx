@@ -53,7 +53,7 @@ export default function Header(props: HeaderProps) {
           leftIcon={<QuestionOutlineIcon />}
           colorScheme="teal"
           onClick={() =>
-            window.open("https://feedback.clarity-search.dev/", "_blank")
+            window.open("https://feedback.search-clarity.dev/", "_blank")
           }
           variant="link"
         >

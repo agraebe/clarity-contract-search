@@ -12,6 +12,8 @@ export default function handler(req, res) {
 
   const newContracts = [];
   const contractCalls = new Map();
+  let allContracts = 0;
+  let filteredContracts = 0;
 
   fetch(
     "https://stacks-node-api.mainnet.stacks.co/extended/v1/tx/?limit=200&type=contract_call"
@@ -20,9 +22,9 @@ export default function handler(req, res) {
       data.results.map(elem => {
         contractCalls.has(elem.contract_call.contract_id)
           ? contractCalls.set(
-              elem.contract_call.contract_id,
-              contractCalls.get(elem.contract_call.contract_id) + 1
-            )
+            elem.contract_call.contract_id,
+            contractCalls.get(elem.contract_call.contract_id) + 1
+          )
           : contractCalls.set(elem.contract_call.contract_id, 0);
       });
 
@@ -30,10 +32,12 @@ export default function handler(req, res) {
         "https://stacks-node-api.mainnet.stacks.co/extended/v1/tx/?limit=200&type=smart_contract"
       ).then(resp => {
         resp.json().then(async data => {
+          allContracts = data.results.length;
           // filter for success txs
           const successTxs = data.results.filter(
             tx => tx.tx_status === "success"
           );
+          filteredContracts = successTxs.length;
 
           // instantiate contract instances
           successTxs.forEach(tx => {
@@ -55,7 +59,13 @@ export default function handler(req, res) {
             "EX",
             60 * 10
           );
-          res.status(200).json(newContracts);
+          res.status(200).json({
+            counts: {
+              all: allContracts,
+              filtered: filteredContracts,
+            },
+            contracts: newContracts
+          });
         });
       });
     });

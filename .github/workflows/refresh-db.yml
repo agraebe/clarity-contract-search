@@ -11,6 +11,6 @@ jobs:
       - name: Deploy Stage
         uses: fjogeleit/http-request-action@master
         with:
-          url: "https://clarity-search.dev/api/refresh"
+          url: "https://search-clarity.dev/api/refresh"
           timeout: 15000
       - run: echo ">>> Contract uploading completed!"
