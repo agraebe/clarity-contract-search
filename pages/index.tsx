@@ -405,12 +405,7 @@ export default function Home({ contracts }) {
         } successfully deployed mainnet contracts`}
       />
       {renderFilter(useColorModeValue("gray.50", "gray.700"))}
-      <Flex
-        direction="row"
-        px="4"
-        pt="16"
-        display={{ base: "none", md: "flex" }}
-      >
+      <Flex direction="row" px="6" display={{ base: "none", md: "flex" }}>
         <Text
           fontSize="md"
           flex="1"

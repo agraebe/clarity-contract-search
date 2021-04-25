@@ -24,7 +24,7 @@ export function Contracts(props: ContractProps) {
         )
         .map((contract, i) => {
           return (
-            <Box key={i} pt={i === 0 ? "0" : "16"}>
+            <Box key={i} pt="16">
               <CodeBlockMini
                 contract={contract}
                 prism={Prism}

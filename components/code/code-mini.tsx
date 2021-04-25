@@ -8,10 +8,31 @@ import {
   Progress,
   Text,
   useColorModeValue,
-  Button
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  IconButton,
+  useToast,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure
 } from "@chakra-ui/react";
 import Highlight, { defaultProps } from "prism-react-renderer";
-import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
+import {
+  TriangleDownIcon,
+  TriangleUpIcon,
+  HamburgerIcon,
+  ExternalLinkIcon,
+  DownloadIcon,
+  CopyIcon
+} from "@chakra-ui/icons";
 import Copy from "../copy/copy";
 import Principal from "../principal/principal";
 import { ClarityContractSerialized } from "../../classes/clarity-contract";
@@ -22,6 +43,8 @@ const OPENED_HEIGHT = "100%";
 const CLOSED_LINES = 10;
 
 export function CodeBlockMini(props: SourceProps) {
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [expanded, setExpanded] = useState(false);
   const expandedColor = useColorModeValue("teal.100", "teal.700");
   const closedColor = useColorModeValue("gray.50", "gray.700");
@@ -36,6 +59,57 @@ export function CodeBlockMini(props: SourceProps) {
       flex="1"
       className={`codeWrapper ${expanded ? "openCode" : "closedCode"}`}
     >
+      <Modal isOpen={isOpen} onClose={onClose} size="xl">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{`Fork ${props.contract.name} with Clarinet`}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text pb="4">Use this contract for local development:</Text>
+            <Highlight
+              {...defaultProps}
+              code={getClarinetCode(props.contract.id)}
+              language="bash"
+            >
+              {({ className, style, tokens, getLineProps, getTokenProps }) => (
+                <pre className={className} style={style}>
+                  {tokens.map((line, i) => (
+                    <div {...getLineProps({ line, key: i })}>
+                      {line.map((token, key) => (
+                        <span {...getTokenProps({ token, key })} />
+                      ))}
+                    </div>
+                  ))}
+                </pre>
+              )}
+            </Highlight>
+            <Text pt="4">
+              Alternatively, you can use Gitpod to fork this contract inside a
+              web editor
+            </Text>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => {
+                window.open(
+                  `https://gitpod.io/#id=${props.contract.id}/https://github.com/agraebe/clarinet-gitpod`,
+                  "_blank"
+                );
+                onClose();
+              }}
+              rightIcon={<ExternalLinkIcon />}
+            >
+              Run with Gitpod
+            </Button>
+            <Button variant="ghost" onClick={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       <Flex
         direction="row"
         p="2"
@@ -73,6 +147,38 @@ export function CodeBlockMini(props: SourceProps) {
               colorScheme="orange"
               value={props.contract.complexity}
             />
+          </Box>
+          <Box px="2">
+            <Menu isLazy>
+              <MenuButton
+                as={IconButton}
+                aria-label="use"
+                icon={<HamburgerIcon />}
+                variant="ghost"
+              />
+              <MenuList>
+                <MenuItem icon={<DownloadIcon />} onClick={onOpen}>
+                  Fork with Clarinet
+                </MenuItem>
+                <MenuItem
+                  icon={<ExternalLinkIcon />}
+                  onClick={() =>
+                    window.open(
+                      `https://explorer.stacks.co/sandbox/contract-call/${props.contract.sender}/${props.contract.id}?chain=mainnet`,
+                      "_blank"
+                    )
+                  }
+                >
+                  Interact with Sandbox
+                </MenuItem>
+                <MenuItem
+                  icon={<CopyIcon />}
+                  onClick={() => copyToClipBoard(props.contract, toast)}
+                >
+                  Copy to clipboard
+                </MenuItem>
+              </MenuList>
+            </Menu>
           </Box>
         </Flex>
       </Flex>
@@ -131,6 +237,28 @@ export function CodeBlockMini(props: SourceProps) {
       </div>
     </Box>
   );
+}
+
+function copyToClipBoard(contract, toast) {
+  navigator.clipboard.writeText(contract.source);
+  toast({
+    title: "Copied",
+    description: `Source code for ${contract.name} copied to clipboard.`,
+    status: "success",
+    duration: 2000
+  });
+}
+
+function getClarinetCode(id) {
+  return `
+  # install Clarinet
+  $ cargo install clarinet
+  # fork contract, replace myProject
+  $ clarinet fork myProject ${id}
+  # move into project folder
+  $ cd myProject
+  # run console
+  $ clarinet console`;
 }
 
 function pad(n, width, z) {
