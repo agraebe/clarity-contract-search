@@ -27,9 +27,7 @@ import redis from "redis";
 import { Footer } from "../components/footer/footer";
 import Contracts from "../components/contracts/contracts";
 import Header from "../components/header/header";
-import ClarityContract, {
-  ClarityContractSerialized
-} from "../classes/clarity-contract";
+import { ClarityContractSerialized } from "../classes/clarity-contract";
 
 export default function Home({ contracts }) {
   const router = useRouter();
@@ -399,7 +397,7 @@ export default function Home({ contracts }) {
   }
 
   return (
-    <Flex direction="column">
+    <Flex direction="column" p="12" pt="0">
       <Header
         title="Clarity contracts"
         sub={`${
@@ -410,7 +408,7 @@ export default function Home({ contracts }) {
       <Flex
         direction="row"
         px="4"
-        pt="4"
+        pt="16"
         display={{ base: "none", md: "flex" }}
       >
         <Text

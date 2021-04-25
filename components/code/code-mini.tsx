@@ -1,31 +1,46 @@
 // @ts-nocheck
 /* tslint:disable */
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Flex,
   Link,
   Progress,
   Text,
-  useColorModeValue
+  useColorModeValue,
+  Button
 } from "@chakra-ui/react";
 import Highlight, { defaultProps } from "prism-react-renderer";
+import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import Copy from "../copy/copy";
 import Principal from "../principal/principal";
 import { ClarityContractSerialized } from "../../classes/clarity-contract";
 
+const CLOSED_HEIGHT = "304px";
+const CLOSED_CODE_HEIGHT = "240px";
+const OPENED_HEIGHT = "100%";
+const CLOSED_LINES = 10;
+
 export function CodeBlockMini(props: SourceProps) {
+  const [expanded, setExpanded] = useState(false);
+  const expandedColor = useColorModeValue("teal.100", "teal.700");
+  const closedColor = useColorModeValue("gray.50", "gray.700");
+
   return (
     <Box
-      h="300px"
+      h={expanded ? OPENED_HEIGHT : CLOSED_HEIGHT}
       mr="2"
       borderWidth="1px"
       borderRadius="lg"
       flex="1"
-      overflow="hidden"
-      className="codeWrapper"
+      className={`codeWrapper ${expanded ? "openCode" : "closedCode"}`}
     >
-      <Flex direction="row" p="2" bg={useColorModeValue("gray.50", "gray.700")}>
+      <Flex
+        direction="row"
+        p="2"
+        bg={expanded ? expandedColor : closedColor}
+        borderTopRadius="lg"
+      >
         <Box flex="1">
           <Principal principal={props.contract.sender} />
           <Link href={`/contracts/${props.contract.id}`}>
@@ -58,7 +73,12 @@ export function CodeBlockMini(props: SourceProps) {
         </Flex>
       </Flex>
       <Copy source={props.contract.source} />
-      <Box h="240px" overflow="scroll" className="codeView">
+      <Box
+        h={expanded ? OPENED_HEIGHT : CLOSED_CODE_HEIGHT}
+        overflow={expanded ? "scroll" : "hidden"}
+        className="codeView"
+        borderBottomRadius="lg"
+      >
         <Highlight
           {...defaultProps}
           code={props.contract.source}
@@ -68,30 +88,43 @@ export function CodeBlockMini(props: SourceProps) {
           {({ className, style, tokens, getLineProps, getTokenProps }) => (
             <pre className={className} style={style}>
               {tokens.map((line, i) => {
-                return (
-                  <div
-                    key={i}
-                    {...getLineProps({ line, key: i })}
-                    className={
-                      props.keywords.length > 0 &&
-                      line.find(elem => elem.content.includes(props.keywords))
-                        ? "token-line highlightedLine"
-                        : "token-line"
-                    }
-                  >
-                    <span className="lineNumber">{pad(i + 1, 3)}</span>
-                    <span className="lineContent">
-                      {line.map((token, key) => (
-                        <span key={key} {...getTokenProps({ token, key })} />
-                      ))}
-                    </span>
-                  </div>
-                );
+                if ((!expanded && i < CLOSED_LINES) || expanded) {
+                  return (
+                    <div
+                      key={i}
+                      {...getLineProps({ line, key: i })}
+                      className={
+                        props.keywords.length > 0 &&
+                        line.find(elem => elem.content.includes(props.keywords))
+                          ? "token-line highlightedLine"
+                          : "token-line"
+                      }
+                    >
+                      <span className="lineNumber">{pad(i + 1, 3)}</span>
+                      <span className="lineContent">
+                        {line.map((token, key) => (
+                          <span key={key} {...getTokenProps({ token, key })} />
+                        ))}
+                      </span>
+                    </div>
+                  );
+                }
               })}
             </pre>
           )}
         </Highlight>
       </Box>
+      <div className="expandWrapper">
+        <Button
+          size="xs"
+          rightIcon={expanded ? <TriangleUpIcon /> : <TriangleDownIcon />}
+          onClick={() => setExpanded(!expanded)}
+          colorScheme="teal"
+          className="expandBtn"
+        >
+          {expanded ? "show less" : "show more"}
+        </Button>
+      </div>
     </Box>
   );
 }

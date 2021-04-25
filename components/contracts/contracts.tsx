@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Box, Skeleton, HStack } from "@chakra-ui/react";
 import Prism from "prismjs";
 import sort from "fast-sort";
@@ -8,22 +8,6 @@ import { ClarityContractSerialized } from "../../classes/clarity-contract";
 clarity(Prism);
 
 export function Contracts(props: ContractProps) {
-  useEffect(() => {
-    if (props.contracts.length > 0) {
-      const elements = document.getElementsByClassName("codeView");
-
-      for (let i = 0; i < elements.length; i++) {
-        if (elements[i].getElementsByClassName("highlightedLine")[0]) {
-          elements[i]
-            .getElementsByClassName("highlightedLine")[0]
-            .scrollIntoView();
-        }
-      }
-
-      window.scrollTo(0, 0);
-    }
-  }, [props.contracts]);
-
   if (props.contracts.length === 0) {
     return renderSkeleton();
   }
@@ -40,7 +24,7 @@ export function Contracts(props: ContractProps) {
         )
         .map((contract, i) => {
           return (
-            <Box key={i} pt={i === 0 ? "0" : "8"}>
+            <Box key={i} pt={i === 0 ? "0" : "16"}>
               <CodeBlockMini
                 contract={contract}
                 prism={Prism}

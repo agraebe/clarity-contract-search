@@ -22,9 +22,9 @@ export default function handler(req, res) {
       data.results.map(elem => {
         contractCalls.has(elem.contract_call.contract_id)
           ? contractCalls.set(
-            elem.contract_call.contract_id,
-            contractCalls.get(elem.contract_call.contract_id) + 1
-          )
+              elem.contract_call.contract_id,
+              contractCalls.get(elem.contract_call.contract_id) + 1
+            )
           : contractCalls.set(elem.contract_call.contract_id, 0);
       });
 
@@ -62,7 +62,7 @@ export default function handler(req, res) {
           res.status(200).json({
             counts: {
               all: allContracts,
-              filtered: filteredContracts,
+              filtered: filteredContracts
             },
             contracts: newContracts
           });
