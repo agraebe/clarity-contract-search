@@ -8,7 +8,7 @@ import {
   Progress,
   Text,
   useColorModeValue,
-  Button,
+  Button
 } from "@chakra-ui/react";
 import Highlight, { defaultProps } from "prism-react-renderer";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
@@ -96,9 +96,7 @@ export function CodeBlockMini(props: SourceProps) {
                       {...getLineProps({ line, key: i })}
                       className={
                         props.keywords.length > 0 &&
-                        line.find((elem) =>
-                          elem.content.includes(props.keywords)
-                        )
+                        line.find(elem => elem.content.includes(props.keywords))
                           ? "token-line highlightedLine"
                           : "token-line"
                       }
