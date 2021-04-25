@@ -16,12 +16,12 @@
     "bluebird": "^3.7.2",
     "fast-sort": "^2.2.0",
     "framer-motion": "^3.7.0",
+    "moment": "^2.29.1",
     "next": "10.0.7",
     "prism-react-renderer": "^1.2.0",
     "prismjs": "^1.23.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "react-jdenticon": "^0.0.9",
     "redis": "^3.1.1",
     "sass": "^1.32.8",
     "tsdx": "^0.14.1"

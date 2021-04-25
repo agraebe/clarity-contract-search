@@ -25,6 +25,7 @@ export function CodeBlockMini(props: SourceProps) {
   const [expanded, setExpanded] = useState(false);
   const expandedColor = useColorModeValue("teal.100", "teal.700");
   const closedColor = useColorModeValue("gray.50", "gray.700");
+  const codeLines = (props.contract.source.match(/\n/g) || []).length + 1;
 
   return (
     <Box
@@ -42,7 +43,10 @@ export function CodeBlockMini(props: SourceProps) {
         borderTopRadius="lg"
       >
         <Box flex="1">
-          <Principal principal={props.contract.sender} />
+          <Principal
+            principal={props.contract.sender}
+            time={props.contract.blockTime}
+          />
           <Link href={`/contracts/${props.contract.id}`}>
             {props.contract.name}
           </Link>
@@ -122,7 +126,7 @@ export function CodeBlockMini(props: SourceProps) {
           colorScheme="teal"
           className="expandBtn"
         >
-          {expanded ? "show less" : "show more"}
+          {expanded ? "show less" : `show ${codeLines - 10} more lines`}
         </Button>
       </div>
     </Box>
