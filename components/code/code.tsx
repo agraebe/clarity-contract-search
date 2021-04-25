@@ -18,7 +18,6 @@ import {
   Portal
 } from "@chakra-ui/react";
 import Highlight, { defaultProps } from "prism-react-renderer";
-import Copy from "../copy/copy";
 import Principal from "../principal/principal";
 import { ClarityContractSerialized } from "../../classes/clarity-contract";
 import ClarRef from "../../data/clarity-reference.json";
@@ -71,7 +70,6 @@ export function CodeBlock(props: SourceProps) {
           </Flex>
         </Flex>
       )}
-      <Copy source={props.contract.source} />
       <Box overflow="scroll">
         <Highlight
           {...defaultProps}

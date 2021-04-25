@@ -33,7 +33,6 @@ import {
   DownloadIcon,
   CopyIcon
 } from "@chakra-ui/icons";
-import Copy from "../copy/copy";
 import Principal from "../principal/principal";
 import { ClarityContractSerialized } from "../../classes/clarity-contract";
 
@@ -182,7 +181,6 @@ export function CodeBlockMini(props: SourceProps) {
           </Box>
         </Flex>
       </Flex>
-      <Copy source={props.contract.source} />
       <Box
         h={expanded ? OPENED_HEIGHT : CLOSED_CODE_HEIGHT}
         overflow={expanded ? "scroll" : "hidden"}

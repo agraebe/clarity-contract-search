@@ -66,23 +66,8 @@ pre[class*="language-"] {
   min-height: 240px;
 }
 
-.openCode:hover .copyWrapper {
-  display: block;
-}
-
-.copyWrapper {
-  position: relative;
-  display: none;
-}
-
 .expandWrapper {
   position: relative;
-}
-
-.copyBtn {
-  position: absolute !important;
-  right: 10px;
-  top: 10px;
 }
 
 .expandBtn {
