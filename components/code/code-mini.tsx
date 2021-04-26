@@ -163,7 +163,7 @@ export function CodeBlockMini(props: SourceProps) {
                   icon={<ExternalLinkIcon />}
                   onClick={() =>
                     window.open(
-                      `https://explorer.stacks.co/sandbox/contract-call/${props.contract.sender}/${props.contract.id}?chain=mainnet`,
+                      `https://explorer.stacks.co/sandbox/contract-call/${props.contract.sender}/${props.contract.name}?chain=mainnet`,
                       "_blank"
                     )
                   }
