@@ -22,7 +22,7 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure
+  useDisclosure,
 } from "@chakra-ui/react";
 import Highlight, { defaultProps } from "prism-react-renderer";
 import {
@@ -31,7 +31,7 @@ import {
   HamburgerIcon,
   ExternalLinkIcon,
   DownloadIcon,
-  CopyIcon
+  CopyIcon,
 } from "@chakra-ui/icons";
 import Principal from "../principal/principal";
 import { ClarityContractSerialized } from "../../classes/clarity-contract";
@@ -156,7 +156,7 @@ export function CodeBlockMini(props: SourceProps) {
                 variant="ghost"
               />
               <MenuList>
-                <MenuItem icon={<DownloadIcon />} onClick={onOpen}>
+                <MenuItem icon={<DownloadIcon />} onClick={onOpen} isDisabled>
                   Fork with Clarinet
                 </MenuItem>
                 <MenuItem
@@ -167,6 +167,7 @@ export function CodeBlockMini(props: SourceProps) {
                       "_blank"
                     )
                   }
+                  isDisabled
                 >
                   Interact with Sandbox
                 </MenuItem>
@@ -204,7 +205,9 @@ export function CodeBlockMini(props: SourceProps) {
                       {...getLineProps({ line, key: i })}
                       className={
                         props.keywords.length > 0 &&
-                        line.find(elem => elem.content.includes(props.keywords))
+                        line.find((elem) =>
+                          elem.content.includes(props.keywords)
+                        )
                           ? "token-line highlightedLine"
                           : "token-line"
                       }
@@ -243,7 +246,7 @@ function copyToClipBoard(contract, toast) {
     title: "Copied",
     description: `Source code for ${contract.name} copied to clipboard.`,
     status: "success",
-    duration: 2000
+    duration: 2000,
   });
 }
 
