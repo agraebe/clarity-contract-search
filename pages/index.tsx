@@ -21,6 +21,7 @@ import {
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
+import Head from "next/head";
 import { useState } from "react";
 import bluebird from "bluebird";
 import redis from "redis";
@@ -404,6 +405,9 @@ export default function Home({ contracts }) {
           contracts.length === 0 ? "loading" : contracts.length
         } successfully deployed mainnet contracts`}
       />
+      <Head>
+        <title>Clarity Contract Search</title>
+      </Head>
       {renderFilter(useColorModeValue("gray.50", "gray.700"))}
       <Flex direction="row" px="6" display={{ base: "none", md: "flex" }}>
         <Text

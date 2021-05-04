@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "tsdx lint pages components --fix"
+    "lint": "tsdx lint pages components --fix",
+    "view-redis": "redis-commander"
   },
   "dependencies": {
     "@chakra-ui/icons": "^1.0.5",
