@@ -157,7 +157,7 @@ export function CodeBlockMini(props: SourceProps) {
               />
               <MenuList>
                 <MenuItem icon={<DownloadIcon />} onClick={onOpen} isDisabled>
-                  Fork with Clarinet
+                  Fork with Clarinet (coming soon)
                 </MenuItem>
                 <MenuItem
                   icon={<ExternalLinkIcon />}
@@ -169,7 +169,7 @@ export function CodeBlockMini(props: SourceProps) {
                   }
                   isDisabled
                 >
-                  Interact with Sandbox
+                  Interact with Sandbox (soon)
                 </MenuItem>
                 <MenuItem
                   icon={<CopyIcon />}
