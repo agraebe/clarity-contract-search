@@ -23,6 +23,7 @@ import { ClarityContractSerialized } from "../../classes/clarity-contract";
 import ClarRef from "../../data/clarity-reference.json";
 
 export function CodeBlock(props: SourceProps) {
+  //
   const color = useColorModeValue("gray.50", "gray.700");
   return (
     <Box
