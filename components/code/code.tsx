@@ -48,7 +48,7 @@ export function CodeBlock(props: SourceProps) {
           <Flex w="25%" direction="row">
             <Box flex="1" px="2">
               <Text className="complexOverlay" as="kbd">
-                contract calls
+                usage
               </Text>
               <Progress
                 borderRadius="md"

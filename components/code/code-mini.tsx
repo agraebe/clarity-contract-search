@@ -124,10 +124,10 @@ export function CodeBlockMini(props: SourceProps) {
             {props.contract.name}
           </Link>
         </Box>
-        <Flex w="25%" direction="row">
+        <Flex w="25%" direction="row" display={{ base: "none", md: "flex" }}>
           <Box flex="1" px="2">
             <Text className="complexOverlay" as="kbd">
-              contract calls
+              usage
             </Text>
             <Progress
               borderRadius="md"
