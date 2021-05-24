@@ -175,7 +175,7 @@ export function CodeBlockMini(props: SourceProps) {
                   icon={<ExternalLinkIcon />}
                   onClick={() =>
                     window.open(
-                      `https://lgalabru.github.io/clarity-repl/?fetch_contract=${props.contract.sender}.${props.contract.name}`,
+                      `https://hirosystems.github.io/clarity-repl/?fetch_contract=${props.contract.sender}.${props.contract.name}`,
                       "_blank"
                     )
                   }
