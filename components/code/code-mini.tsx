@@ -167,9 +167,8 @@ export function CodeBlockMini(props: SourceProps) {
                       "_blank"
                     )
                   }
-                  isDisabled
                 >
-                  Interact with Sandbox (soon)
+                  Interact via Explorer Sandbox
                 </MenuItem>
                 <MenuItem
                   icon={<ExternalLinkIcon />}
@@ -180,7 +179,7 @@ export function CodeBlockMini(props: SourceProps) {
                     )
                   }
                 >
-                  Interact with REPL
+                  Interact via Clarity REPL
                 </MenuItem>
                 <MenuItem icon={<CopyIcon />}>Copy to clipboard</MenuItem>
               </MenuList>
