@@ -260,7 +260,7 @@ function getClarinetCode(id) {
   # install Clarinet
   $ cargo install clarinet
   # fork contract, replace myProject
-  $ clarinet fork myProject ${id}
+  $ clarinet contract fork ${id}
   # move into project folder
   $ cd myProject
   # run console
