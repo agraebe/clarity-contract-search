@@ -10,7 +10,13 @@ export function Principal(props: PrincipalProps) {
       <Box w={4} h={4} isTruncated>
         <SHA256Avatar hash={props.principal} />
       </Box>
-      <Text fontSize="xs" fontWeight="bold" color="gray.500" isTruncated display={{ base: "none", md: "block" }}>
+      <Text
+        fontSize="xs"
+        fontWeight="bold"
+        color="gray.500"
+        isTruncated
+        display={{ base: "none", md: "block" }}
+      >
         {props.principal}
       </Text>
       <Text fontSize="xs" color="gray.500" isTruncated>

@@ -1,7 +1,7 @@
 name: Refresh database every 10 minutes
 on:
   schedule:
-  - cron: "*/5 * * * *"
+  - cron: "*/30 * * * *"
 
 jobs:
   Redis-Update:
@@ -13,7 +13,7 @@ jobs:
         uses: fjogeleit/http-request-action@master
         with:
           url: "https://search-clarity.dev/api/refresh"
-          timeout: 15000
+          timeout: 30000
       - name: Show counts
         run: echo ${{ steps.req.outputs.response }}
       - run: echo ">>> Contract uploading completed!"
