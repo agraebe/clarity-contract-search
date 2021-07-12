@@ -121,23 +121,34 @@ export default function Home({ contracts }) {
         );
     }
 
-    router.push(
-      `/?declare=${typeof filterQuery === "string" ? filterQuery : ""}&use=${
-        typeof useQuery === "string" ? useQuery : ""
-      }&search=${searchTerm}`,
-      undefined,
-      { shallow: true }
-    );
+    if (
+      filterQuery.length > 0 ||
+      useQuery.length > 0 ||
+      searchTerm.length > 0
+    ) {
+      router.push(
+        `/?declare=${filterQuery}&use=${useQuery}&search=${searchTerm}`,
+        undefined,
+        { shallow: true }
+      );
+    }
   }, [included, using, searchTerm]);
 
   function filterContracts() {
     setFilteredContracts([]);
 
-    contracts.contracts.forEach((contract, i) => {
-      if (isIncluded(contract)) {
-        setFilteredContracts((arr) => [...arr, contract]);
-      }
-    });
+    if (
+      contracts &&
+      contracts.hasOwnProperty("contracts") &&
+      contracts.contracts.constructor === Array &&
+      contracts.contracts.length !== 0
+    ) {
+      contracts.contracts.forEach((contract, i) => {
+        if (isIncluded(contract)) {
+          setFilteredContracts((arr) => [...arr, contract]);
+        }
+      });
+    }
   }
 
   function renderSearch() {
@@ -403,9 +414,12 @@ export default function Home({ contracts }) {
       <Header
         title="Clarity contracts"
         sub={`${
-          contracts.contracts.length === 0
-            ? "loading"
-            : contracts.contracts.length
+          contracts &&
+          contracts.hasOwnProperty("contracts") &&
+          contracts.contracts.constructor === Array &&
+          contracts.contracts.length !== 0
+            ? contracts.contracts.length
+            : "loading"
         } successfully deployed mainnet contracts`}
       />
       <Head>
@@ -443,7 +457,7 @@ export async function getStaticProps(context) {
     password: process.env.REDIS_PASSWORD,
   });
 
-  let contracts = JSON.parse(await cache.getAsync("contracts"));
+  const contracts = JSON.parse(await cache.getAsync("contracts"));
 
   // close redis connection
   cache.quit();

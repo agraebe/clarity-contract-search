@@ -1,4 +1,4 @@
-name: Refresh database every 10 minutes
+name: Refresh database every 30 minutes
 on:
   schedule:
   - cron: "*/30 * * * *"
@@ -15,5 +15,5 @@ jobs:
           url: "https://search-clarity.dev/api/refresh"
           timeout: 30000
       - name: Show counts
-        run: echo ${{ steps.req.outputs.response }}
+        run: echo ${{ steps.req.outputs.response.counts }}
       - run: echo ">>> Contract uploading completed!"

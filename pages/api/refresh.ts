@@ -21,6 +21,9 @@ export default async function handler(req, res) {
   // set cache to expire after 10 minutes
   await cache.set("contracts", JSON.stringify(contracts), "EX", 60 * 10);
 
+  // close redis connection
+  cache.quit();
+
   return res.status(200).json(contracts);
 }
 
