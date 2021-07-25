@@ -1,5 +1,6 @@
 import bluebird from "bluebird";
 import redis from "redis";
+import moment from "moment";
 import ClarityContract from "../../classes/clarity-contract";
 
 export default async function handler(req, res) {
@@ -19,7 +20,7 @@ export default async function handler(req, res) {
   const contracts = await processAllContracts(contractResponses, contractCalls);
 
   // set cache to expire after 10 minutes
-  await cache.set("contracts", JSON.stringify(contracts), "EX", 60 * 10);
+  await cache.set("contracts", JSON.stringify(contracts));
 
   // close redis connection
   cache.quit();
@@ -66,6 +67,47 @@ async function processAllContractCalls(calls) {
   return contractCalls;
 }
 
+function transformData(contracts: ClarityContract[]) {
+  const contractPerWeek = new Map();
+
+  contracts.map((contract, i) => {
+    const week = moment(contract.blockTime * 1000, "x").week();
+    contractPerWeek.set(week, (contractPerWeek.get(week) || 0) + 1);
+  });
+
+  // need to be sorted for accumulation to work
+  const contractsArr = Array.from(contractPerWeek.entries()).sort((a, b) => {
+    // sort by week
+    return a[0] - b[0];
+  });
+
+  // accumulate
+  const lastWeek = contractsArr.reduce((accumulator, value, i) => {
+    if (i > 0) {
+      contractsArr[i - 1][1] = accumulator;
+    }
+    return accumulator + value[1];
+  }, contractsArr[0][1] || 0);
+
+  contractsArr[contractsArr.length - 1][1] = lastWeek;
+
+  const responseArr = [];
+
+  contractsArr.map(([week, count]) => {
+    responseArr.push({
+      x: week,
+      y: count,
+    });
+  });
+
+  return [
+    {
+      id: "contracts",
+      data: responseArr,
+    },
+  ];
+}
+
 async function processAllContracts(contracts, calls) {
   const allContracts = contracts.length;
   // filter for success txs
@@ -86,11 +128,15 @@ async function processAllContracts(contracts, calls) {
     );
   });
 
+  // create chart data
+  const chartData = transformData(newContracts);
+
   return {
     counts: {
       all: allContracts,
       filtered: filteredContracts
     },
-    contracts: newContracts
+    contracts: newContracts,
+    analytics: chartData,
   };
 }

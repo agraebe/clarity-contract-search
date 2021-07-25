@@ -28,6 +28,7 @@ import redis from "redis";
 import { Footer } from "../components/footer/footer";
 import Contracts from "../components/contracts/contracts";
 import Header from "../components/header/header";
+import ContractChart from "../components/chart/contract-chart";
 import { ClarityContractSerialized } from "../classes/clarity-contract";
 
 export default function Home({ contracts }) {
@@ -137,18 +138,11 @@ export default function Home({ contracts }) {
   function filterContracts() {
     setFilteredContracts([]);
 
-    if (
-      contracts &&
-      contracts.hasOwnProperty("contracts") &&
-      contracts.contracts.constructor === Array &&
-      contracts.contracts.length !== 0
-    ) {
-      contracts.contracts.forEach((contract, i) => {
-        if (isIncluded(contract)) {
-          setFilteredContracts((arr) => [...arr, contract]);
-        }
-      });
-    }
+    contracts.contracts.forEach((contract, i) => {
+      if (isIncluded(contract)) {
+        setFilteredContracts((arr) => [...arr, contract]);
+      }
+    });
   }
 
   function renderSearch() {
@@ -413,18 +407,14 @@ export default function Home({ contracts }) {
     <Flex direction="column" p="12" pt="0">
       <Header
         title="Clarity contracts"
-        sub={`${
-          contracts &&
-          contracts.hasOwnProperty("contracts") &&
-          contracts.contracts.constructor === Array &&
-          contracts.contracts.length !== 0
-            ? contracts.contracts.length
-            : "loading"
-        } successfully deployed mainnet contracts`}
+        sub={`${contracts.contracts.length} successfully deployed mainnet contracts`}
       />
       <Head>
         <title>Clarity Contract Search</title>
       </Head>
+      <Box px="6" py="12">
+        <ContractChart chartData={contracts.analytics} />
+      </Box>
       {renderFilter(useColorModeValue("gray.50", "gray.700"))}
       <Flex direction="row" px="6" display={{ base: "none", md: "flex" }}>
         <Text
