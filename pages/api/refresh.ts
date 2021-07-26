@@ -81,13 +81,16 @@ function transformData(contracts: ClarityContract[]) {
     return a[0] - b[0];
   });
 
+  console.log(contractsArr);
+
   // accumulate
   const lastWeek = contractsArr.reduce((accumulator, value, i) => {
     if (i > 0) {
       contractsArr[i - 1][1] = accumulator;
+      return accumulator + value[1];
     }
-    return accumulator + value[1];
-  }, contractsArr[0][1] || 0);
+    return accumulator;
+  }, contractsArr[0][1]);
 
   contractsArr[contractsArr.length - 1][1] = lastWeek;
 
