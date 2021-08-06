@@ -10,7 +10,7 @@ import {
   SliderTrack,
   Text,
   useColorModeValue,
-  useToken
+  useToken,
 } from "@chakra-ui/react";
 import React from "react";
 
@@ -25,7 +25,9 @@ export async function sha256(message: string) {
   const hashArray = Array.from(new Uint8Array(hashBuffer));
 
   // convert bytes to hex string
-  const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+  const hashHex = hashArray
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
   return hashHex;
 }
 
@@ -59,7 +61,7 @@ function polarPoint(radius: number, angle: number): Point {
   // Trigonometric rotation + inverted Y = clockwise rotation, nifty!
   return {
     x: radius * Math.cos(2 * Math.PI * angle - Math.PI / 2),
-    y: radius * Math.sin(2 * Math.PI * angle - Math.PI / 2)
+    y: radius * Math.sin(2 * Math.PI * angle - Math.PI / 2),
   };
 }
 
@@ -87,7 +89,7 @@ interface GenerateSectionArgs {
 export const mapValueToColor: ColorMapper = ({
   value,
   hashSoul,
-  circleSoul
+  circleSoul,
 }) => {
   const colorH = value >> 4;
   const colorS = (value >> 2) & 0x03;
@@ -104,7 +106,7 @@ function generateSection({
   outerRadius,
   innerRadius,
   horcrux,
-  variant = "normal"
+  variant = "normal",
 }: GenerateSectionArgs) {
   const circleIndex = Math.floor(index / 8);
   const staggering =
@@ -131,7 +133,7 @@ function generateSection({
     moveTo({ x: 0, y: 0 }),
     lineTo(polarPoint(outerRadius, angleA)),
     arcTo(polarPoint(outerRadius, angleB), arcRadius, variant === "spider"),
-    "Z" // close the path
+    "Z", // close the path
   ].join(" ");
 
   return {
@@ -145,8 +147,8 @@ function generateSection({
           ? outerRadius * 0.66
           : innerRadius + (outerRadius - innerRadius) / 2,
         angle
-      )
-    }
+      ),
+    },
   };
 }
 
@@ -156,12 +158,12 @@ function useHashSoul(bytes: string[]) {
     bytes.slice(0, circleSize),
     bytes.slice(1 * circleSize, 2 * circleSize),
     bytes.slice(2 * circleSize, 3 * circleSize),
-    bytes.slice(3 * circleSize, 4 * circleSize)
+    bytes.slice(3 * circleSize, 4 * circleSize),
   ];
   const xor = (xor: number, byte: string) => xor ^ parseInt(byte, 16);
   return {
     soul: (bytes.reduce(xor, 0) / 0xff) * 2 - 1,
-    horcruxes: circles.map(circle => (circle.reduce(xor, 0) / 0xff) * 2 - 1)
+    horcruxes: circles.map((circle) => (circle.reduce(xor, 0) / 0xff) * 2 - 1),
   };
 }
 
@@ -187,7 +189,7 @@ export const SHA256Avatar: React.FC<SHA256AvatarProps> = ({
   const r3 = mix((r1 * Math.sqrt(2)) / 2, r1 * 0.5);
   const r4 = mix(r1 * 0.5, r1 * 0.25);
 
-  const bytes = hash?.match(/.{1,2}/g)?.map(block => block) ?? [];
+  const bytes = hash?.match(/.{1,2}/g)?.map((block) => block) ?? [];
   const { soul, horcruxes } = useHashSoul(bytes);
   const bitCount = Math.round((hash?.length ?? 0) / 64); // 32 sections = 64 hex characters
 
@@ -205,14 +207,14 @@ export const SHA256Avatar: React.FC<SHA256AvatarProps> = ({
         outerRadius,
         innerRadius,
         variant,
-        horcrux
+        horcrux,
       }),
       color: mapColor({
         value: parseInt(value, 16),
         bitCount,
         hashSoul: soul,
-        circleSoul: horcrux
-      })
+        circleSoul: horcrux,
+      }),
     };
   });
 
@@ -232,7 +234,7 @@ export const SHA256Avatar: React.FC<SHA256AvatarProps> = ({
             strokeLinejoin="round"
             style={{
               transition: ".15s ease-out",
-              transform: section.transform
+              transform: section.transform,
             }}
           />
         ))}
@@ -288,7 +290,7 @@ export const AdjustableRadiusFactorSHA256Avatar: React.FC<SHA256AvatarProps> = (
         textAlign="center"
         fontSize="xs"
         sx={{
-          fontVariantNumeric: "tabular-nums"
+          fontVariantNumeric: "tabular-nums",
         }}
       >
         Blend factor: {radiusFactor.toFixed(2)}
@@ -347,7 +349,7 @@ export const InteractiveAvatar: React.FC<SHA256AvatarProps> = ({
         textAlign="center"
         mb={4}
         dangerouslySetInnerHTML={{
-          __html: hashText
+          __html: hashText,
         }}
       />
       <Input
@@ -355,7 +357,7 @@ export const InteractiveAvatar: React.FC<SHA256AvatarProps> = ({
         maxW={64}
         mx="auto"
         value={text}
-        onChange={e => setText(e.target.value)}
+        onChange={(e) => setText(e.target.value)}
       />
     </>
   );
